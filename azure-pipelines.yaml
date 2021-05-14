@@ -20,10 +20,9 @@ stages:
       displayName: Download terraform.tfvars
       inputs:
         secureFile: 'terraform.tfvars'
-
     - task: DownloadSecureFile@1
       name: eqr_vm_public_key
-      displayName: 'Download Public Key'
+      displayName: Download Public Key
       inputs:
         secureFile: 'azure_eqr_id_rsa.pub'
 
@@ -38,10 +37,10 @@ stages:
         cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
       displayName: Copy terraform.tfvars
 
-    - bash: |
-        cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
-        chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
-      displayName: Copy ssh key
+#    - bash: |
+#        cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
+#        chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
+#      displayName: Copy ssh key
 
     - bash: |
         echo Pipeline workspace dir is $(Pipeline.Workspace)
