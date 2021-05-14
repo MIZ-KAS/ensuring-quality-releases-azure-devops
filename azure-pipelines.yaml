@@ -74,7 +74,7 @@ stages:
         commandOptions: |
           -auto-approve 
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: 'Ensuring Quality Releases'
+        environmentServiceNameAzureRM: 'azurerm-sc-eqr'
 
 - stage: Build
   jobs:
@@ -112,7 +112,7 @@ stages:
           - task: AzureWebApp@1
             displayName: Deploy Azure WebApp
             inputs:
-              azureSubscription: 'Ensuring Quality Releases'
+              azureSubscription: 'azurerm-sc-eqr'
               appName: 'marco-paspuel-webapi-appservice'
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
