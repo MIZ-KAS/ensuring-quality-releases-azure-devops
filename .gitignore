@@ -36,3 +36,6 @@ terraform.tfvars
 
 # Shell script that sets up service principal information
 .azure_envs.sh
+
+# Mac files
+.DS_Store
