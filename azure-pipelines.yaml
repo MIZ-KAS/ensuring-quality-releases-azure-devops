@@ -7,117 +7,117 @@ trigger:
     - README.md
     - .gitignore
 
-#stages:
-#- stage: Provision
-#  jobs:
-#  - job: provision_azure_infrastructure
-#    displayName: Provision Azure Infrastructure
-#    pool:
-#      vmImage: 'ubuntu-18.04'
-#    steps:
-#    - task: DownloadSecureFile@1
-#      name: tfvardef
-#      displayName: Download terraform.tfvars
-#      inputs:
-#        secureFile: 'terraform.tfvars'
-#    - task: DownloadSecureFile@1
-#      name: eqr_vm_public_key
-#      displayName: Download Public Key
-#      inputs:
-#        secureFile: 'azure_eqr_id_rsa.pub'
-#
-#    - bash: |
-#        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
-#      displayName: Copy terraform.tfvars
-#
-#    - bash: |
-#        mkdir ~/.ssh/
-#        cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
-#        chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
-#      displayName: Copy ssh key
-#
-#    # install Terraform Azure Pipelines Extension by Microsoft DevLabs
-#    # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
-#    - task: TerraformInstaller@0
-#      displayName: Install Terraform
-#      inputs:
-#        terraformVersion: '0.14.10'
-#
-#    - task: TerraformTaskV1@0
-#      displayName: Terraform Init
-#      inputs:
-#        provider: 'azurerm'
-#        command: 'init'
-#        backendServiceArm: 'azurerm-sc-eqr'
-#        backendAzureRmResourceGroupName: 'tstate'
-#        backendAzureRmStorageAccountName: 'tstate17096'
-#        backendAzureRmContainerName: 'tstate'
-#        backendAzureRmKey: 'terraform.tfstate'
-#        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-#
-#    - task: TerraformTaskV1@0
-#      displayName: Terraform Apply
-#      inputs:
-#        provider: 'azurerm'
-#        command: 'apply'
-#        commandOptions: |
-#          -auto-approve
-#        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-#        environmentServiceNameAzureRM: 'azurerm-sc-eqr'
-#
-#- stage: Build
-#  jobs:
-#  - job: build_artifacts
-#    displayName: Build Artifacts
-#    pool:
-#      vmImage: 'ubuntu-18.04'
-#    steps:
-#    - task: ArchiveFiles@2
-#      displayName: Archive FakeRestAPI
-#      inputs:
-#        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
-#        includeRootFolder: false
-#        archiveType: 'zip'
-#        archiveFile: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
-#        verbose: true
-#
-#    - task: PublishPipelineArtifact@1
-#      displayName: Publish FakeRestAPI artifact
-#      inputs:
-#        targetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
-#        artifactName: 'drop-fakerestapi'
-#
-#    - task: ArchiveFiles@2
-#      displayName: 'Archive Selenium tests'
-#      inputs:
-#        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
-#        includeRootFolder: false
-#        archiveType: 'zip'
-#        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium-tests.zip'
-#    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium-tests.zip
-#      displayName: 'Upload Selenium Tests'
-#      artifact: drop-selenium
-#
-#- stage: Deployment
-#  jobs:
-#  - deployment: deployment_fakerestapi
-#    displayName: Deploy FakeRestAPI
-#    pool:
-#      vmImage: 'ubuntu-18.04'
-#    environment: 'TEST'
-#    strategy:
-#      runOnce:
-#        deploy:
-#          steps:
-#          - task: AzureWebApp@1
-#            displayName: Deploy Azure WebApp
-#            inputs:
-#              azureSubscription: 'azurerm-sc-eqr-app'
-#              appName: 'marco-paspuel-webapi-appservice'
-#              appType: webApp
-#              package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
-#              deploymentMethod: zipDeploy
-#              TakeAppOfflineFlag: false
+stages:
+- stage: Provision
+  jobs:
+  - job: provision_azure_infrastructure
+    displayName: Provision Azure Infrastructure
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - task: DownloadSecureFile@1
+      name: tfvardef
+      displayName: Download terraform.tfvars
+      inputs:
+        secureFile: 'terraform.tfvars'
+    - task: DownloadSecureFile@1
+      name: eqr_vm_public_key
+      displayName: Download Public Key
+      inputs:
+        secureFile: 'azure_eqr_id_rsa.pub'
+
+    - bash: |
+        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
+      displayName: Copy terraform.tfvars
+
+    - bash: |
+        mkdir ~/.ssh/
+        cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
+        chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
+      displayName: Copy ssh key
+
+    # install Terraform Azure Pipelines Extension by Microsoft DevLabs
+    # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
+    - task: TerraformInstaller@0
+      displayName: Install Terraform
+      inputs:
+        terraformVersion: '0.14.10'
+
+    - task: TerraformTaskV1@0
+      displayName: Terraform Init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'azurerm-sc-eqr'
+        backendAzureRmResourceGroupName: 'tstate'
+        backendAzureRmStorageAccountName: 'tstate17096'
+        backendAzureRmContainerName: 'tstate'
+        backendAzureRmKey: 'terraform.tfstate'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+
+    - task: TerraformTaskV1@0
+      displayName: Terraform Apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        commandOptions: |
+          -auto-approve
+        workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
+        environmentServiceNameAzureRM: 'azurerm-sc-eqr'
+
+- stage: Build
+  jobs:
+  - job: build_artifacts
+    displayName: Build Artifacts
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+    - task: ArchiveFiles@2
+      displayName: Archive FakeRestAPI
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+        verbose: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish FakeRestAPI artifact
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
+        artifactName: 'drop-fakerestapi'
+
+    - task: ArchiveFiles@2
+      displayName: 'Archive Selenium tests'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium-tests.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium-tests.zip
+      displayName: 'Upload Selenium Tests'
+      artifact: drop-selenium
+
+- stage: Deployment
+  jobs:
+  - deployment: deployment_fakerestapi
+    displayName: Deploy FakeRestAPI
+    pool:
+      vmImage: 'ubuntu-18.04'
+    environment: 'TEST'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureWebApp@1
+            displayName: Deploy Azure WebApp
+            inputs:
+              azureSubscription: 'azurerm-sc-eqr-app'
+              appName: 'marco-paspuel-webapi-appservice'
+              appType: webApp
+              package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
+              deploymentMethod: zipDeploy
+              TakeAppOfflineFlag: false
 
 - stage: PostDeployment
   displayName: 'Post-deployment'
