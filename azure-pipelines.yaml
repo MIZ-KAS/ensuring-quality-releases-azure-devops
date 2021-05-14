@@ -101,7 +101,7 @@ stages:
           - task: AzureWebApp@1
             displayName: Deploy Azure WebApp
             inputs:
-              azureSubscription: 'azurerm-sc-eqr'
+              azureSubscription: 'azurerm-sc-eqr-app'
               appName: 'marco-paspuel-webapi-appservice'
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
