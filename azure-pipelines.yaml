@@ -87,6 +87,17 @@ stages:
         targetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
         artifactName: 'drop-fakerestapi'
 
+    - task: ArchiveFiles@2
+      displayName: 'Archive Selenium tests'
+      inputs:
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
+        includeRootFolder: false
+        archiveType: 'zip'
+        archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium-tests.zip'
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-selenium-tests.zip
+      displayName: 'Upload Selenium Tests'
+      artifact: drop-selenium
+
 - stage: Deployment
   jobs:
   - deployment: deployment_fakerestapi
@@ -106,3 +117,46 @@ stages:
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
               deploymentMethod: zipDeploy
+              TakeAppOfflineFlag: false
+
+- stage: PostDeployment
+  displayName: 'Post-deployment'
+  jobs:
+  - deployment: UITests
+    displayName: 'UI Tests'
+    environment:
+      name:  'test'
+      resourceType: VirtualMachine
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            displayName: 'Download Selenium'
+            artifact: drop-selenium
+          - task: Bash@3
+            displayName: 'Install Selenium'
+            inputs:
+              targetType: 'inline'
+              script: |
+                #! /bin/bash
+
+                sudo apt-get upgrade -y
+                sudo apt-get install python3-pip -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                sudo apt-get install -y chromium-chromedriver
+                pip3 install selenium
+                export PATH=$PATH:/usr/lib/chromium-browser/
+                cd $(Pipeline.Workspace)/drop-selenium
+                unzip -o $(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium-tests -d .
+          - task: Bash@3
+            displayName: 'Run Selenium Tests'
+            inputs:
+              targetType: 'inline'
+              script: |
+                sudo mkdir /var/logs
+                cd $(Pipeline.Workspace)/drop-selenium
+                echo $(date "+%Y-%m-%d %H:%M:%S") >> /var/logs/selenium-test.log
+                python3 login.py >> /var/logs/selenium-test.log
+                cat /var/logs/selenium-test.log
