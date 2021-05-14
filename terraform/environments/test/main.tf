@@ -7,9 +7,9 @@ provider "azurerm" {
 }
 terraform {
   backend "azurerm" {
-    resource_group_name  = "$terraform-state-rg"
-    storage_account_name = "tstatep3udacity09762"
-    container_name       = "tstateudacityp3"
+    resource_group_name  = "${var.resource_group}"
+    storage_account_name = "tstate17096"
+    container_name       = "tstate"
     key                  = "terraform.tfstate"
   }
 }
