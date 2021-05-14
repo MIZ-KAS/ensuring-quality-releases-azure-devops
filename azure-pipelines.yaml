@@ -59,10 +59,10 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'Ensuring Quality Releases'
-        backendAzureRmResourceGroupName: 'terraform-state-rg'
-        backendAzureRmStorageAccountName: 'tstatep3udacity09762'
-        backendAzureRmContainerName: 'tstateudacityp3'
+        backendServiceArm: 'azurerm-sc-eqr'
+        backendAzureRmResourceGroupName: 'tstate'
+        backendAzureRmStorageAccountName: 'tstate17096'
+        backendAzureRmContainerName: 'tstate'
         backendAzureRmKey: 'terraform.tfstate'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
 
