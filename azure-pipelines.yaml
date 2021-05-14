@@ -79,7 +79,8 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-	    commandOptions: -var "public_key=$(PUBLIC_KEY)"
+        commandOptions: |
+          -var "public_key=$(PUBLIC_KEY)"
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         environmentServiceNameAzureRM: 'azurerm-sc-eqr'
 
