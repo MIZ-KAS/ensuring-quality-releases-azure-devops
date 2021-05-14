@@ -5,9 +5,6 @@
 *.tfstate
 *.tfstate.*
 
-# terraform.tfvars
-terraform.tfvars
-
 # Crash log files
 crash.log
 
@@ -33,3 +30,9 @@ override.tf.json
 
 # PyCharm
 .idea/
+
+# terraform.tfvars
+terraform.tfvars
+
+# Shell script that sets up service principal information
+.azure_envs.sh
