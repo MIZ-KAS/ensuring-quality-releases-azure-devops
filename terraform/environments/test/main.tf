@@ -61,5 +61,5 @@ module "vm" {
   subnet_id        = "${module.network.subnet_id_test}"
   public_ip_address_id = "${module.publicip.public_ip_address_id}"
   vm_admin_username  = var.vm_admin_username
-  public_key_path      = var.public_key_path
+  public_key       = "${var.public_key}"
 }

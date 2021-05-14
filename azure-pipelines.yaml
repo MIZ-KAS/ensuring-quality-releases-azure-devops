@@ -21,19 +21,18 @@ stages:
       inputs:
         secureFile: 'terraform.tfvars'
 
-    - task: DownloadSecureFile@1
-      name: udacity_public_key
-      displayName: 'Download Public Key'
-      inputs:
-        secureFile: 'azure_eqr_id_rsa.pub'
-
-
-#    # Needed for Terraform VM deployment
-#    - task: InstallSSHKey@0
+#    - task: DownloadSecureFile@1
+#      name: udacity_public_key
+#      displayName: 'Download Public Key'
 #      inputs:
-#        knownHostsEntry: 'known_hosts'
-#        sshPublicKey: $(PUBLIC_KEY)
-#        sshKeySecureFile: 'azure_eqr_id_rsa'
+#        secureFile: 'azure_eqr_id_rsa.pub'
+
+
+    # Needed for Terraform VM deployment
+    - task: InstallSSHKey@0
+      inputs:
+        knownHostsEntry: 'default'
+        sshKeySecureFile: 'azure_eqr_id_rsa'
 
     - bash: |
         cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
@@ -80,7 +79,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        commandOptions: '-var "public_key_path=$(udacity_public_key.secureFilePath)"'
+	    commandOptions: -var "public_key=$(PUBLIC_KEY)"
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         environmentServiceNameAzureRM: 'azurerm-sc-eqr'
 

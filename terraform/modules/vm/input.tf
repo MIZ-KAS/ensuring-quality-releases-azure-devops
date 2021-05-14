@@ -9,5 +9,5 @@ variable "application_type" {}
 variable "resource_type" {}
 
 variable "vm_admin_username" {}
-variable "public_key_path" {}
+variable "public_key" {}
 
