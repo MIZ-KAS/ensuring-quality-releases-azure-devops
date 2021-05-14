@@ -136,20 +136,25 @@ stages:
             artifact: drop-selenium
           - task: Bash@3
             displayName: 'Install Selenium'
-            inputs:
-              targetType: 'inline'
-              script: |
-                #! /bin/bash
-
-                sudo apt-get upgrade -y
-                sudo apt-get install python3-pip -y
-                sudo apt-get install unzip -y
-                sudo apt-get install -y chromium-browser
-                sudo apt-get install -y chromium-chromedriver
-                pip3 install selenium
-                export PATH=$PATH:/usr/lib/chromium-browser/
-                cd $(Pipeline.Workspace)/drop-selenium
-                unzip -o $(Pipeline.Workspace)/drop-selenium/$(Build.BuildId)-selenium-tests -d .
+          - bash: |
+              pwd
+              hostname
+              uname -a
+              cat /etc/*-release
+              sudo apt-get install software-properties-common -y
+              sudo apt-add-repository universe -y
+              sudo apt-get update -y
+              sudo apt-get install python3-pip -y
+              sudo apt-get install unzip -y
+              sudo apt-get install -y chromium-browser
+              sudo apt-get install -y chromium-chromedriver
+              python3 -m pip install --upgrade pip
+              pip3 install selenium
+              python3 -V
+              pip3 -V
+              /usr/bin/chromium-browser --version
+              /usr/bin/chromedriver --version
+              python3 -c "import selenium; print('Selenium Version:', selenium.__version__)"
           - task: Bash@3
             displayName: 'Run Selenium Tests'
             inputs:
