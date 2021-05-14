@@ -43,22 +43,22 @@ stages:
         chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
       displayName: Copy ssh key
 
-#    - bash: |
-#        echo Pipeline workspace dir is $(Pipeline.Workspace)
-#        echo Terraform variable definition file is $(tfvardef.secureFilePath)
-#        cd $(Agent.TempDirectory)
-#        pwd
-#        ls -la
-#        cat azure_eqr_id_rsa.pub
-#        cd ~/.ssh/
-#        pwd
-#        ls -la
-#        cat known_hosts
-#        # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
-#        cd $(System.DefaultWorkingDirectory)
-#        pwd
-#        ls -la
-#      displayName: Verify build environment (pre)
+    - bash: |
+        echo Pipeline workspace dir is $(Pipeline.Workspace)
+        echo Terraform variable definition file is $(tfvardef.secureFilePath)
+        cd $(Agent.TempDirectory)
+        pwd
+        ls -la
+        cat azure_eqr_id_rsa.pub
+        cd ~/.ssh/
+        pwd
+        ls -la
+        cat known_hosts
+        # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
+        cd $(System.DefaultWorkingDirectory)
+        pwd
+        ls -la
+      displayName: Verify build environment (pre)
 
     # install Terraform Azure Pipelines Extension by Microsoft DevLabs
     # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
