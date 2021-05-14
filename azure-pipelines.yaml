@@ -21,33 +21,40 @@ stages:
       inputs:
         secureFile: 'terraform.tfvars'
 
-    # Needed for Terraform VM deployment
-    - task: InstallSSHKey@0
+    - task: DownloadSecureFile@1
+      name: udacity_public_key
+      displayName: 'Download Public Key'
       inputs:
-        knownHostsEntry: 'known_hosts'
-        sshPublicKey: $(PUBLIC_KEY)
-        sshKeySecureFile: 'azure_eqr_id_rsa'
+        secureFile: 'azure_eqr_id_rsa.pub'
+
+
+#    # Needed for Terraform VM deployment
+#    - task: InstallSSHKey@0
+#      inputs:
+#        knownHostsEntry: 'known_hosts'
+#        sshPublicKey: $(PUBLIC_KEY)
+#        sshKeySecureFile: 'azure_eqr_id_rsa'
 
     - bash: |
         cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
       displayName: Copy terraform.tfvars
 
-    - bash: |
-        echo Pipeline workspace dir is $(Pipeline.Workspace)
-        echo Terraform variable definition file is $(tfvardef.secureFilePath)
-        cd $(Agent.TempDirectory)
-        pwd
-        ls -la
-        cat azure_eqr_id_rsa.pub
-        cd ~/.ssh/
-        pwd
-        ls -la
-        cat known_hosts
-        # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
-        cd $(System.DefaultWorkingDirectory)
-        pwd
-        ls -la
-      displayName: Verify build environment (pre)
+#    - bash: |
+#        echo Pipeline workspace dir is $(Pipeline.Workspace)
+#        echo Terraform variable definition file is $(tfvardef.secureFilePath)
+#        cd $(Agent.TempDirectory)
+#        pwd
+#        ls -la
+#        cat azure_eqr_id_rsa.pub
+#        cd ~/.ssh/
+#        pwd
+#        ls -la
+#        cat known_hosts
+#        # $(System.DefaultWorkingDirectory) is equivalent to $(Build.SourcesDirectory)
+#        cd $(System.DefaultWorkingDirectory)
+#        pwd
+#        ls -la
+#      displayName: Verify build environment (pre)
 
     # install Terraform Azure Pipelines Extension by Microsoft DevLabs
     # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
@@ -73,8 +80,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        commandOptions: |
-          -auto-approve 
+        commandOptions: '-var "public_key_path=$(udacity_public_key.secureFilePath)"'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         environmentServiceNameAzureRM: 'azurerm-sc-eqr'
 
