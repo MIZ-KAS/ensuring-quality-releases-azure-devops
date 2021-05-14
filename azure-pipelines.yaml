@@ -155,8 +155,9 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                sudo mkdir /var/logs
-                cd $(Pipeline.Workspace)/drop-selenium
-                echo $(date "+%Y-%m-%d %H:%M:%S") >> /var/logs/selenium-test.log
-                python3 login.py >> /var/logs/selenium-test.log
-                cat /var/logs/selenium-test.log
+                #! /bin/bash
+                echo 'hello from custom VM'
+                source env/bin/activate
+                export PATH=$PATH:`pwd` # add chromedriver executable to path
+                python3 ../drop-ui-tests/login.py
+                cat selenium.log

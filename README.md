@@ -19,3 +19,7 @@ Configure the storage account for terraform
     ./config_storage_account.sh
 ```
 
+Login to the newly created vm
+``` bash
+    ssh -i ~./ssh/azure_eqr_id_rsa marco@13.69.60.241
+```
