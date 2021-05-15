@@ -1,57 +1,63 @@
-# #!/usr/bin/env python
+# #!/usr/bin/env python3
+from datetime import datetime
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-import datetime
+
+Locators = {'id_username': 'user-name', 'id_password': 'password', 'id_login': 'login-button',
+            'class_add_to_cart': 'inventory_item', 'class_remove': 'btn_secondary '}
 
 
 def timestamp():
-    ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return (ts + '\t')
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return ts + '\t'
+
 
 # Start the browser and login with standard_user
-def login(user, password):
+def login(user_name, password):
     print(timestamp() + 'Starting the browser...')
     options = ChromeOptions()
     options.add_argument('--no-sandbox')
     options.add_argument("--headless")
-    driver = webdriver.Chrome(options=options)
+    # chrome_driver = webdriver.Chrome('/Users/marco/Downloads/chromedriver')
+    chrome_driver = webdriver.Chrome(options=options)
+    chrome_driver.get('https://www.saucedemo.com/')
+
     print(timestamp() + 'Browser started successfully. Navigating to the demo page to login.')
-    driver.get('https://www.saucedemo.com/')
-    # login
-    driver.find_element_by_css_selector("input[id='user-name']").send_keys(user)
-    driver.find_element_by_css_selector("input[id='password']").send_keys(password)
-    driver.find_element_by_id("login-button").click()
-    product_label = driver.find_element_by_css_selector("div[class='product_label']").text
-    assert "Products" in product_label
-    print(timestamp() + 'Login with username {:s} and password {:s} successfully.'.format(user, password))
-    return driver
+    chrome_driver.find_element_by_id(Locators['id_username']).send_keys(user_name)
+    chrome_driver.find_element_by_id(Locators['id_password']).send_keys(password)
+    chrome_driver.find_element_by_id("login-button").click()
+    print(timestamp() + 'Login with username {:s} and password {:s} successfully.'.format(user_name, password))
+    return chrome_driver
 
-def add_cart(driver, n_items):
-    for i in range(n_items):
-        element = "a[id='item_" + str(i) + "_title_link']"  # Get the URL of the product
-        driver.find_element_by_css_selector(element).click()  # Click the URL
-        driver.find_element_by_css_selector("button.btn_primary.btn_inventory").click()  # Add the product to the cart
-        product = driver.find_element_by_css_selector("div[class='inventory_details_name']").text  # Get the name of the product from the page
-        print(timestamp() + product + " added to shopping cart.")  # Display message saying which product was added
-        driver.find_element_by_css_selector("button.inventory_details_back_button").click()  # Click the Back button
-    print(timestamp() + '{:d} items are all added to shopping cart successfully.'.format(n_items))
 
-def remove_cart(driver, n_items):
-    for i in range(n_items):
-        element = "a[id='item_" + str(i) + "_title_link']"
-        driver.find_element_by_css_selector(element).click()
-        driver.find_element_by_css_selector("button.btn_secondary.btn_inventory").click()
-        product = driver.find_element_by_css_selector("div[class='inventory_details_name']").text
-        print(timestamp() + product + " removed from shopping cart.")  # Display message saying which product was added
-        driver.find_element_by_css_selector("button.inventory_details_back_button").click()
-    print(timestamp() + '{:d} items are all removed from shopping cart successfully.'.format(n_items))
+def add_cart(driver):
+    print(timestamp() + 'Add all element to cart')
+    list_add_to_cart = driver.find_elements_by_class_name(
+        Locators['class_add_to_cart'])
+
+    for element in list_add_to_cart:
+        item_name = element.find_element_by_class_name(
+            'inventory_item_name').text
+        element.find_element_by_class_name('btn_inventory').click()
+        print(timestamp() + 'Added {} to cart'.format(item_name))
+
+    driver.find_element_by_class_name('shopping_cart_link').click()
+    print(timestamp() + f'{len(list_add_to_cart)} items were added to shopping the cart successfully.')
+
+
+def remove_cart(driver):
+    for item in driver.find_elements_by_class_name('cart_item'):
+        item_name = item.find_element_by_class_name('inventory_item_name').text
+        item.find_element_by_class_name('cart_button').click()
+        print(timestamp() + 'Removed {} from cart'.format(item_name))
+
+    driver.find_element_by_class_name('btn_secondary').click()
+    print(timestamp() + 'All items were removed from the shopping cart successfully.')
 
 
 if __name__ == "__main__":
-    N_ITEMS = 6
-    TEST_USERNAME = 'standard_user'
-    TEST_PASSWORD = 'secret_sauce'
-    driver = login(TEST_USERNAME, TEST_PASSWORD)
-    add_cart(driver, N_ITEMS)
-    remove_cart(driver, N_ITEMS)
+    chrome_driver = login(user_name='standard_user', password='secret_sauce')
+    add_cart(driver=chrome_driver)
+    remove_cart(driver=chrome_driver)
     print(timestamp() + 'Selenium tests are all successfully completed!')
