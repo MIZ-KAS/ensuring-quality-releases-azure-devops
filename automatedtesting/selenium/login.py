@@ -27,7 +27,7 @@ def login(user_name, password):
     chrome_driver.find_element_by_id(Locators['id_username']).send_keys(user_name)
     chrome_driver.find_element_by_id(Locators['id_password']).send_keys(password)
     chrome_driver.find_element_by_id("login-button").click()
-    print(timestamp() + 'Login with username {:s} and password {:s} successfully.'.format(user_name, password))
+    print(timestamp() + f'Login with username {user_name} and password {password} successfully.')
     return chrome_driver
 
 
@@ -40,7 +40,7 @@ def add_cart(driver):
         item_name = element.find_element_by_class_name(
             'inventory_item_name').text
         element.find_element_by_class_name('btn_inventory').click()
-        print(timestamp() + 'Added {} to cart'.format(item_name))
+        print(timestamp() + f'Added {item_name} to cart')
 
     driver.find_element_by_class_name('shopping_cart_link').click()
     print(timestamp() + f'{len(list_add_to_cart)} items were added to shopping the cart successfully.')
@@ -50,7 +50,7 @@ def remove_cart(driver):
     for item in driver.find_elements_by_class_name('cart_item'):
         item_name = item.find_element_by_class_name('inventory_item_name').text
         item.find_element_by_class_name('cart_button').click()
-        print(timestamp() + 'Removed {} from cart'.format(item_name))
+        print(timestamp() + f'Removed {item_name} from cart')
 
     driver.find_element_by_class_name('btn_secondary').click()
     print(timestamp() + 'All items were removed from the shopping cart successfully.')
