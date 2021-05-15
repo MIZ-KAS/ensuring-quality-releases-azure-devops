@@ -29,7 +29,7 @@ module "network" {
   application_type      = var.application_type
   resource_type         = "NET"
   resource_group        = module.resource_group.resource_group_name
-  address_prefixes_test = var.address_prefixes_test
+  address_prefix_test   = var.address_prefix_test
   project               = var.project
 }
 
@@ -40,7 +40,7 @@ module "nsg-test" {
   resource_type         = "NSG"
   resource_group        = module.resource_group.resource_group_name
   subnet_id             = module.network.subnet_id_test
-  address_prefixes_test = var.address_prefixes_test
+  address_prefix_test   = var.address_prefix_test
   project               = var.project
 }
 

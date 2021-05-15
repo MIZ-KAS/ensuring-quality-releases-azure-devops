@@ -4,7 +4,7 @@ variable "application_type" {}
 variable "resource_type" {}
 variable "resource_group" {}
 variable "subnet_id" {}
-variable "address_prefixes_test" {}
+variable "address_prefix_test" {}
 
 # Tags
 variable "project" {}

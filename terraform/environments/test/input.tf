@@ -11,7 +11,7 @@ variable "application_type" {}
 
 # Network
 variable virtual_network_name {}
-variable "address_prefixes_test" {}
+variable "address_prefix_test" {}
 variable address_space {}
 
 # Virtual Machine

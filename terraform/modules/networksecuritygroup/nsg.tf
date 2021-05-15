@@ -11,7 +11,7 @@ resource "azurerm_network_security_group" "nsg" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "5000"
-    source_address_prefix      = var.address_prefixes_test
+    source_address_prefix      = var.address_prefix_test
     destination_address_prefix = "*"
   }
   security_rule {
@@ -32,8 +32,4 @@ resource "azurerm_network_security_group" "nsg" {
 resource "azurerm_subnet_network_security_group_association" "test" {
     subnet_id                 = var.subnet_id
     network_security_group_id = azurerm_network_security_group.nsg.id
-
-  tags = {
-    Project = var.project
-  }
 }
