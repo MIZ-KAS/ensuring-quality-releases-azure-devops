@@ -4,3 +4,6 @@ variable "resource_group" {}
 
 variable "application_type" {}
 variable "resource_type" {}
+
+# Tags
+variable "project" {}

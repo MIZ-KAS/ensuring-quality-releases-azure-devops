@@ -9,3 +9,6 @@ variable "application_type" {}
 variable "resource_type" {}
 
 variable "vm_admin_username" {}
+
+# Tags
+variable "project" {}
