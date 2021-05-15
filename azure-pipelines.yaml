@@ -261,13 +261,13 @@ stages:
         ls -la
       displayName: Install Newman
     - bash: |
-        newman run automatedtesting/postman/regression-test.json \
+        newman run automatedtesting/postman/regression_test.json \
                    --reporters cli,junit \
                    --reporter-junit-export log/newman/regression-test.xml \
                    --suppress-exit-code
       displayName: Newman regression test
     - bash: |
-        newman run automatedtesting/postman/validation-test.json \
+        newman run automatedtesting/postman/validation_test.json \
                    -e automatedtesting/postman/validation-test-env.postman-environment.json \
                    --reporters cli,junit \
                    --reporter-junit-export log/newman/validation-test.xml \
