@@ -22,4 +22,5 @@ Configure the storage account for terraform
 Login to the newly created vm
 ``` bash
     ssh -i ~./ssh/azure_eqr_id_rsa marco@13.69.60.241
+    ssh -o "IdentitiesOnly=yes" -i ~/.ssh/azure_eqr_id_rsa marco@40.68.13.148
 ```
