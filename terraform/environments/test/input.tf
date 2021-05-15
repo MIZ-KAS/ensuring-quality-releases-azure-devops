@@ -18,4 +18,4 @@ variable address_space {}
 variable vm_admin_username {}
 
 # Tags
-variable "tags" {}
+variable "project" {}

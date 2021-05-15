@@ -6,4 +6,4 @@ variable "resource_type" {}
 variable "resource_group" {}
 
 # Tags
-variable "tags" {}
+variable "project" {}

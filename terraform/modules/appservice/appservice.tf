@@ -9,7 +9,7 @@ resource "azurerm_app_service_plan" "test" {
   }
 
   tags = {
-    type = map
+    Project = var.project
   }
 }
 
@@ -24,6 +24,6 @@ resource "azurerm_app_service" "test" {
   }
 
   tags = {
-    type = map
+    Project = var.project
   }
 }
