@@ -201,7 +201,7 @@ stages:
     - bash: |
         sudo apt-get install openjdk-11-jre-headless -y
         java -version
-        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.tgz -O jmeter.tgz
+        wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.1.tgz -O jmeter.tgz
         tar xzvf jmeter.tgz
         apache-jmeter-5.4/bin/jmeter --version
         # create log directory
@@ -211,35 +211,35 @@ stages:
       displayName: Install JMeter
     - bash: |
         apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/stress_test.jmx \
-                                     -l log/jmeter/stress-test-result.csv \
-                                     -e -f -o log/jmeter/stress-test-html-report \
-                                     -j log/jmeter/jmeter-stress-test.log
+                                     -l log/jmeter/stress_test_results.csv \
+                                     -e -f -o log/jmeter/stress_test_report \
+                                     -j log/jmeter/jmeter_stress_test.log
       displayName: JMeter stress test
     - bash: |
         apache-jmeter-5.4/bin/jmeter -n -t automatedtesting/jmeter/endurance_test.jmx \
-                                     -l log/jmeter/endurance-test-result.csv \
-                                     -e -f -o log/jmeter/endurance-test-html-report \
-                                     -j log/jmeter/jmeter-endurance-test.log
+                                     -l log/jmeter/endurance_test_results.csv \
+                                     -e -f -o log/jmeter/endurance_test_html_report \
+                                     -j log/jmeter/jmeter_endurance_test.log
       displayName: JMeter endurance test
     - task: ArchiveFiles@2
       displayName: Archive JMeter stress test HTML report
       inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress_test_report'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress-test-html-report-$(Build.BuildId).zip'
+        archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress_test_report-$(Build.BuildId).zip'
         verbose: true
     - task: ArchiveFiles@2
       displayName: Archive JMeter endurance test HTML report
       inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance_test_html_report'
         includeRootFolder: false
         archiveType: 'zip'
-        archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance-test-html-report-$(Build.BuildId).zip'
+        archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance_test_html_report-$(Build.BuildId).zip'
         verbose: true
     - bash: |
-        rm -rf log/jmeter/stress-test-html-report
-        rm -rf log/jmeter/endurance-test-html-report
+        rm -rf log/jmeter/stress_test_report
+        rm -rf log/jmeter/endurance_test_html_report
         cd log/jmeter
         pwd
         ls -la
