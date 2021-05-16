@@ -1,0 +1,14 @@
+{
+	"id": "5a39edde-ff31-4406-8c11-a354f758276b",
+	"name": "marco_paspuel_webapi_env",
+	"values": [
+		{
+			"key": "url",
+			"value": "http://marco-paspuel-webapi-appservice.azurewebsites.net/api",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2021-05-16T08:50:55.264Z",
+	"_postman_exported_using": "Postman/8.4.0"
+}
