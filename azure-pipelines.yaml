@@ -163,7 +163,7 @@ stages:
 - stage: Test
   jobs:
   - deployment: test_vm
-    displayName: Test on Virtual Machine
+    displayName: Functional UI Tests
     environment:
       name: 'TEST'
       resourceType: VirtualMachine
