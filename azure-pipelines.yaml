@@ -33,7 +33,7 @@ variables:
 
 stages:
 - stage: provision
-  displayName: 'Provisioning'
+  displayName: 'Provision'
   jobs:
   - job: provision_azure_infrastructure
     displayName: 'Provisioning Azure Infrastructure'
@@ -50,10 +50,16 @@ stages:
       name: eqr_vm_public_key
       inputs:
         secureFile: 'azure_eqr_id_rsa.pub'
+    - task: Bash@3
+      displayName: 'Copy terraform.tfvars'
+      inputs:
+        targetType: 'inline'
+        script: |
+          cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
 
-    - bash: |
-        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
-      displayName: Copy terraform.tfvars
+#    - bash: |
+#        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
+#      displayName: Copy terraform.tfvars
 
     - bash: |
         mkdir ~/.ssh/
