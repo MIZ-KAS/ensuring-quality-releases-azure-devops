@@ -1,3 +1,4 @@
+name: Azure Pipelines
 trigger:
   branches:
     include:
@@ -7,22 +8,45 @@ trigger:
     - README.md
     - .gitignore
 
+  # Azure Resource Manager service connection for pipelines
+  serviceConnectionTerraform: 'azurerm-sc-eqr'
+  serviceConnectionProject: 'azurerm-sc-eqr-app'
+
+  # Web app name
+  webAppName: 'marco-paspuel-webapi-appservice'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+  # Python version: 3.7.6
+  pythonVersion: '3.7.6'
+
+  # Terraform version
+  tf_version: "0.14.7"
+
+  # Jmeter version
+  jmeterVersion: '5.2.1'
+
+  # Environment name
+  environmentName: 'test'
+
 stages:
-- stage: Provision
+- stage: provision
+  displayName: 'Provisioning'
   jobs:
   - job: provision_azure_infrastructure
-    displayName: Provision Azure Infrastructure
+    displayName: 'Provisioning Azure Infrastructure'
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
     - task: DownloadSecureFile@1
+      displayName: 'Download terraform.tfvars'
       name: tfvardef
-      displayName: Download terraform.tfvars
       inputs:
         secureFile: 'terraform.tfvars'
     - task: DownloadSecureFile@1
+      displayName: 'Download Public ssh Key'
       name: eqr_vm_public_key
-      displayName: Download Public Key
       inputs:
         secureFile: 'azure_eqr_id_rsa.pub'
 
