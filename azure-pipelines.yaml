@@ -8,6 +8,7 @@ trigger:
     - README.md
     - .gitignore
 
+variables:
   # Azure Resource Manager service connection for pipelines
   serviceConnectionTerraform: 'azurerm-sc-eqr'
   serviceConnectionProject: 'azurerm-sc-eqr-app'
