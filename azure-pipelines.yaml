@@ -45,27 +45,35 @@ stages:
       name: tfvardef
       inputs:
         secureFile: 'terraform.tfvars'
+    - task: Bash@3
+      displayName: 'Copy terraform.tfvars to vm'
+      inputs:
+        targetType: 'inline'
+        script: |
+          cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
     - task: DownloadSecureFile@1
       displayName: 'Download Public ssh Key'
       name: eqr_vm_public_key
       inputs:
         secureFile: 'azure_eqr_id_rsa.pub'
     - task: Bash@3
-      displayName: 'Copy terraform.tfvars'
+      displayName: 'Copy Public ssh Key to vm'
       inputs:
         targetType: 'inline'
         script: |
-          cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
+          mkdir ~/.ssh/
+          cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
+          chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
 
 #    - bash: |
 #        cp $(Agent.TempDirectory)/terraform.tfvars $(System.DefaultWorkingDirectory)/terraform/environments/test
 #      displayName: Copy terraform.tfvars
 
-    - bash: |
-        mkdir ~/.ssh/
-        cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
-        chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
-      displayName: Copy ssh key
+#    - bash: |
+#        mkdir ~/.ssh/
+#        cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
+#        chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
+#      displayName: Copy ssh key
 
     # install Terraform Azure Pipelines Extension by Microsoft DevLabs
     # https://marketplace.visualstudio.com/items?itemName=ms-devlabs.custom-terraform-tasks
