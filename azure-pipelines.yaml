@@ -35,8 +35,8 @@ stages:
 - stage: provision
   displayName: 'Provision'
   jobs:
-  - job: provision_azure_infrastructure
-    displayName: 'Provisioning Azure Infrastructure'
+  - job: provision_infrastructure
+    displayName: 'Provisioning Infrastructure'
     pool:
       vmImage: 'ubuntu-18.04'
     steps:
@@ -135,7 +135,7 @@ stages:
   displayName: 'Deployment'
   jobs:
   - deployment: deploy_fakerestapi
-    displayName: 'Deploy FakeRestAPI'
+    displayName: 'Deploy REST API'
     pool:
       vmImage: 'ubuntu-18.04'
     environment: 'TEST'
@@ -227,6 +227,74 @@ stages:
                 targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
                 artifactName: 'drop-selenium-logs'
 
+  - job: IntegrationTests
+    displayName: 'Integration Tests'
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+      - task: Bash@3
+        displayName: 'Install JMeter'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sudo apt-get install openjdk-11-jre-headless -y
+            java -version
+            wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.1.tgz -O jmeter.tgz
+            tar xzvf jmeter.tgz
+            apache-jmeter-5.4.1/bin/jmeter --version
+            # create log directory
+            mkdir -p log/jmeter
+            pwd
+            ls -la
+      - task: Bash@3
+        displayName: 'JMeter Stress Tests'
+        inputs:
+          targetType: 'inline'
+          script: |
+            apache-jmeter-5.4.1/bin/jmeter -n -t automatedtesting/jmeter/stress_test.jmx \
+                                         -l log/jmeter/stress_test_results.csv \
+                                         -e -f -o log/jmeter/stress_test_report \
+                                         -j log/jmeter/jmeter_stress_test.log
+      - task: Bash@3
+        displayName: 'JMeter Endurance Tests'
+        inputs:
+          targetType: 'inline'
+          script: |
+            apache-jmeter-5.4.1/bin/jmeter -n -t automatedtesting/jmeter/endurance_test.jmx \
+                                         -l log/jmeter/endurance_test_results.csv \
+                                         -e -f -o log/jmeter/endurance_test_html_report \
+                                         -j log/jmeter/jmeter_endurance_test.log
+      - task: ArchiveFiles@2
+        displayName: 'Archive JMeter Stress Test HTML report'
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress_test_report'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress_test_report-$(Build.BuildId).zip'
+          verbose: true
+      - task: ArchiveFiles@2
+        displayName: 'Archive JMeter Endurance Test HTML report'
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance_test_html_report'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance_test_html_report-$(Build.BuildId).zip'
+          verbose: true
+      - task: Bash@3
+        displayName: 'Delete Original JMeter Test HTML Reports'
+        inputs:
+          targetType: 'inline'
+          script: |
+            rm -rf log/jmeter/stress_test_report
+            rm -rf log/jmeter/endurance_test_html_report
+            cd log/jmeter
+            pwd
+            ls -la
+      - task: PublishPipelineArtifact@1
+        displayName: Publish JMeter logs
+        inputs:
+          targetPath: '$(System.DefaultWorkingDirectory)/log/jmeter'
+          artifactName: 'drop-jmeter-logs'
 
 #- stage: Test2
 #  - job: test_jmeter
