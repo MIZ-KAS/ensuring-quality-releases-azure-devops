@@ -111,13 +111,13 @@ stages:
         verbose: true
 
     - task: PublishPipelineArtifact@1
-      displayName: 'Publish FakeRestAPI artifact'
+      displayName: 'Publish FakeRestAPI Artifacts'
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)/fakerestapi-$(Build.BuildId).zip'
         artifactName: 'drop-fakerestapi'
 
     - task: ArchiveFiles@2
-      displayName: 'Archive Selenium'
+      displayName: 'Archive Selenium Tests'
       inputs:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/automatedtesting/selenium'
         includeRootFolder: false
@@ -126,7 +126,7 @@ stages:
         verbose: true
 
     - task: PublishPipelineArtifact@1
-      displayName: 'Publish Selenium artifact'
+      displayName: 'Publish Selenium Tests Artifacts'
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
         artifactName: 'drop-selenium'
@@ -153,15 +153,31 @@ stages:
               deploymentMethod: zipDeploy
               TakeAppOfflineFlag: false
 
-  - deployment: deployment_vm
-    displayName: 'Deploy Virtual Machine'
+- stage: test
+  displayName: 'Test'
+  jobs:
+  - deployment: UItests
+    displayName: 'UI Tests'
     environment:
-      name: 'TEST'
+      name:  'TEST'
       resourceType: VirtualMachine
     strategy:
       runOnce:
         deploy:
           steps:
+            - task: Bash@3
+              displayName: 'Install Log Analytics agent on VM agent'
+              inputs:
+                targetType: 'inline'
+                script: |
+                  pwd
+                  wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
+                  sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
+                  sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
+              env:
+                AZURE_LOG_ANALYTICS_ID: $(AZURE_LOG_ANALYTICS_ID)
+                AZURE_LOG_ANALYTICS_PRIMARY_KEY: $(AZURE_LOG_ANALYTICS_PRIMARY_KEY)
+
             - task: Bash@3
               displayName: 'Install and Configure selenium on VM agent'
               inputs:
@@ -187,51 +203,31 @@ stages:
                   python3 -c "import selenium; print('Selenium Version:', selenium.__version__)"
 
             - task: Bash@3
-              displayName: 'Install Log Analytics agent on VM agent'
+              displayName: 'Run UI Tests with Selenium on VM agent'
               inputs:
                 targetType: 'inline'
                 script: |
+                  cd $(Pipeline.Workspace)/drop-selenium
+                  find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
+                  unzip -o selenium-$(Build.BuildId).zip
                   pwd
-                  wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
-                  sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
-                  sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
-              env:
-                AZURE_LOG_ANALYTICS_ID: $(AZURE_LOG_ANALYTICS_ID)
-                AZURE_LOG_ANALYTICS_PRIMARY_KEY: $(AZURE_LOG_ANALYTICS_PRIMARY_KEY)
+                  ls -la
+                  sudo mkdir -p /var/log/selenium
+                  sudo chmod 664 /var/log/selenium
+                  sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
+                  # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
+                  cd $(System.DefaultWorkingDirectory)
+                  mkdir -p log/selenium
+                  pwd
+                  sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
+                  ls -la
+            - task: PublishPipelineArtifact@1
+              displayName: Publish selenium logs
+              inputs:
+                targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
+                artifactName: 'drop-selenium-logs'
 
-- stage: Test
-  jobs:
-  - deployment: test_vm
-    displayName: Functional UI Tests
-    environment:
-      name: 'TEST'
-      resourceType: VirtualMachine
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - bash: |
-              cd $(Pipeline.Workspace)/drop-selenium
-              find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
-              unzip -o selenium-$(Build.BuildId).zip
-              pwd
-              ls -la
-              sudo mkdir -p /var/log/selenium
-              sudo chmod 664 /var/log/selenium
-              sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
-              # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
-              cd $(System.DefaultWorkingDirectory)
-              mkdir -p log/selenium
-              pwd
-              sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-              ls -la
-            displayName: Run selenium tests
-          - task: PublishPipelineArtifact@1
-            displayName: Publish selenium logs
-            inputs:
-              targetPath: '$(System.DefaultWorkingDirectory)/log/selenium/selenium-test.log'
-              artifactName: 'drop-selenium-logs'
-
+- stage: Test2
   - job: test_jmeter
     displayName: Test JMeter
     pool:
