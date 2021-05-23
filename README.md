@@ -98,6 +98,29 @@ source .azure_envs.sh
 NOTE: The values set in `.azure_envs.sh` are required to run terraform commands from your local environment.
 There is no need to run this script if terraform runs in Azure Pipelines.
 
+#### Azure DevOps
+##### 1. Create an SSH keys for authentication to a Linux VM in Azure
+To generate a public private key pair run the following command (no need to provide a pass phase):
+``` bash
+ssh-keygen -t rsa -b 4096 -f az_eqr_id_rsa
+```
+Go to your ssh directory and ensure that the keys were created:
+``` bash
+cd ~/.ssh/
+ls -ll | grep az_eqr_id_rsa
+```
+For additional information of how to create and use SSH keys, click on the links bellow:
+- [Create and manage SSH keys for authentication to a Linux VM in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed)
+- [Creating and Using SSH Keys](https://serversforhackers.com/c/creating-and-using-ssh-keys)
+
+##### 2. Create a tfvars file to configure Terraform
+Create a `terraform.tfvars` file inside the [test](terraform/environments/test) directory and copy the content of the [terraform.tfvars.template](terraform/environments/test/terraform.tfvars.template)
+to the newly created file. Change the values based on the outputs of the previous steps.
+
+##### 3. Create a new Azure DevOps Project
+A detailed explanation on how to create a new Azure DevOps project can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=300s).
+
+
 
 Log into your Azure account
 ``` bash

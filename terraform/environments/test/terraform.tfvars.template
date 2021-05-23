@@ -1,0 +1,22 @@
+# Azure subscription vars
+subscription_id="00000000-0000-0000-0000-000000000000"
+client_id="00000000-0000-0000-0000-000000000000"
+client_secret="00000000-0000-0000-0000-000000000000"
+tenant_id="00000000-0000-0000-0000-000000000000"
+
+# Resource Group/Location
+location = "westeurope"
+resource_group = "ensuring-quality-releases-rg"
+application_type = "ensuring-quality-releases-webapi"
+
+# VM
+vm_admin_username = "marco"
+vm_public_key = "~/.ssh/az_eqr_id_rsa.pub"
+
+# Network
+virtual_network_name = "eqr-virtual-net"
+address_space = ["10.5.0.0/16"]
+address_prefix_test = "10.5.1.0/24"
+
+# Tags
+project = "ensuring-quality-releases"

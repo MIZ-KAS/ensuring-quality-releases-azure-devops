@@ -16,6 +16,7 @@ variable address_space {}
 
 # Virtual Machine
 variable vm_admin_username {}
+variable vm_public_key {}
 
 # Tags
 variable "project" {}
