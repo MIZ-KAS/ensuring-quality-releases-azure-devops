@@ -45,6 +45,7 @@ stages:
       name: tfvardef
       inputs:
         secureFile: 'terraform.tfvars'
+
     - task: Bash@3
       displayName: 'Copy terraform.tfvars to vm'
       inputs:
@@ -57,6 +58,7 @@ stages:
       name: eqr_vm_public_key
       inputs:
         secureFile: 'azure_eqr_id_rsa.pub'
+
     - task: Bash@3
       displayName: 'Copy public ssh key to vm'
       inputs:
@@ -102,7 +104,7 @@ stages:
       vmImage: 'ubuntu-18.04'
     steps:
     - task: ArchiveFiles@2
-      displayName: 'Archive FakeRestAPI'
+      displayName: 'Archive Rest API'
       inputs:
         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/fakerestapi'
         includeRootFolder: false
@@ -170,7 +172,6 @@ stages:
               inputs:
                 targetType: 'inline'
                 script: |
-                  pwd
                   wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
                   sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
                   sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
@@ -183,10 +184,6 @@ stages:
               inputs:
                 targetType: 'inline'
                 script: |
-                  pwd
-                  hostname
-                  uname -a
-                  cat /etc/*-release
                   sudo apt-get install software-properties-common -y
                   sudo apt-add-repository universe -y
                   sudo apt-get update -y
@@ -196,10 +193,6 @@ stages:
                   sudo apt-get install -y chromium-chromedriver
                   python3 -m pip install --upgrade pip
                   pip3 install selenium==3.141.0
-                  python3 -V
-                  pip3 -V
-                  /usr/bin/chromium-browser --version
-                  /usr/bin/chromedriver --version
                   python3 -c "import selenium; print('Selenium Version:', selenium.__version__)"
 
             - task: Bash@3
@@ -210,17 +203,13 @@ stages:
                   cd $(Pipeline.Workspace)/drop-selenium
                   find . -type f ! -name 'selenium-$(Build.BuildId).zip' -delete  # delete everything except 'selenium-$(Build.BuildId).zip'
                   unzip -o selenium-$(Build.BuildId).zip
-                  pwd
-                  ls -la
                   sudo mkdir -p /var/log/selenium
                   sudo chmod 664 /var/log/selenium
                   sudo python3 -u login.py 2>&1 | sudo tee -a /var/log/selenium/selenium-test.log
-                  # copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
+                  # Copy selenium log file to $(System.DefaultWorkingDirectory)/log/selenium/
                   cd $(System.DefaultWorkingDirectory)
                   mkdir -p log/selenium
-                  pwd
                   sudo cp /var/log/selenium/selenium-test.log log/selenium/selenium-test.log
-                  ls -la
             - task: PublishPipelineArtifact@1
               displayName: Publish selenium logs
               inputs:
@@ -229,8 +218,9 @@ stages:
 
   - job: IntegrationTests
     displayName: 'Integration Tests'
-    pool:
-      vmImage: 'ubuntu-18.04'
+    environment:
+      name:  'TEST'
+      resourceType: VirtualMachine
     steps:
       - task: NodeTool@0
         displayName: Install Node v12.X
@@ -242,11 +232,9 @@ stages:
           targetType: 'inline'
           script: |
             npm install -g newman
-            newman --version
-            # create log directory
+            # Create log directory
             mkdir -p log/newman
-            pwd
-            ls -la
+
       - task: Bash@3
         displayName: 'Newman Regression Test'
         inputs:
@@ -257,6 +245,7 @@ stages:
                        --reporters cli,junit \
                        --reporter-junit-export log/newman/regression-test.xml \
                        --suppress-exit-code
+
       - task: Bash@3
         displayName: 'Newman validation test'
         inputs:
@@ -267,12 +256,13 @@ stages:
                        --reporters cli,junit \
                        --reporter-junit-export log/newman/validation-test.xml \
                        --suppress-exit-code
-            ls -la $(System.DefaultWorkingDirectory)/log/newman/
+
       - task: PublishPipelineArtifact@1
         displayName: 'Publish Newman Logs'
         inputs:
           targetPath: '$(System.DefaultWorkingDirectory)/log/newman'
           artifactName: 'drop-newman-logs'
+
       - task: PublishTestResults@2
         displayName: 'Publish Newman Test Results'
         inputs:
@@ -284,8 +274,9 @@ stages:
 
   - job: StressTests
     displayName: 'Stress Tests'
-    pool:
-      vmImage: 'ubuntu-18.04'
+    environment:
+      name:  'TEST'
+      resourceType: VirtualMachine
     steps:
       - task: Bash@3
         displayName: 'Install JMeter'
@@ -297,10 +288,9 @@ stages:
             wget https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.4.1.tgz -O jmeter.tgz
             tar xzvf jmeter.tgz
             apache-jmeter-5.4.1/bin/jmeter --version
-            # create log directory
+            # Create log directory
             mkdir -p log/jmeter
-            pwd
-            ls -la
+
       - task: Bash@3
         displayName: 'JMeter Stress Tests'
         inputs:
@@ -327,6 +317,7 @@ stages:
           archiveType: 'zip'
           archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/stress_test_report-$(Build.BuildId).zip'
           verbose: true
+
       - task: ArchiveFiles@2
         displayName: 'Archive JMeter Endurance Test HTML report'
         inputs:
@@ -335,6 +326,7 @@ stages:
           archiveType: 'zip'
           archiveFile: '$(System.DefaultWorkingDirectory)/log/jmeter/endurance_test_html_report-$(Build.BuildId).zip'
           verbose: true
+
       - task: Bash@3
         displayName: 'Delete Original JMeter Test HTML Reports'
         inputs:
@@ -342,9 +334,7 @@ stages:
           script: |
             rm -rf log/jmeter/stress_test_report
             rm -rf log/jmeter/endurance_test_html_report
-            cd log/jmeter
-            pwd
-            ls -la
+
       - task: PublishPipelineArtifact@1
         displayName: Publish JMeter logs
         inputs:
