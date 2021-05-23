@@ -17,19 +17,10 @@ variables:
   webAppName: 'marco-paspuel-webapi-appservice'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
-
-  # Python version: 3.7.6
-  pythonVersion: '3.7.6'
-
-  # Terraform version
-  tf_version: "0.14.7"
-
-  # Jmeter version
-  jmeterVersion: '5.2.1'
+  vmImageName: 'ubuntu-18.04'
 
   # Environment name
-  environmentName: 'test'
+  environmentName: 'TEST'
 
 stages:
 - stage: provision
@@ -38,7 +29,7 @@ stages:
   - job: provision_infrastructure
     displayName: 'Provisioning Infrastructure'
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: $(vmImageName)
     steps:
     - task: DownloadSecureFile@1
       displayName: 'Download terraform.tfvars'
@@ -78,7 +69,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'azurerm-sc-eqr'
+        backendServiceArm: $(serviceConnectionTerraform)
         backendAzureRmResourceGroupName: 'tstate'
         backendAzureRmStorageAccountName: 'tstate17096'
         backendAzureRmContainerName: 'tstate'
@@ -93,7 +84,7 @@ stages:
         commandOptions: |
           -auto-approve
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
-        environmentServiceNameAzureRM: 'azurerm-sc-eqr'
+        environmentServiceNameAzureRM: $(serviceConnectionTerraform)
 
 - stage: build
   displayName: 'Build'
@@ -101,7 +92,7 @@ stages:
   - job: build_artifacts
     displayName: 'Build Artifacts'
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: $(vmImageName)
     steps:
     - task: ArchiveFiles@2
       displayName: 'Archive Rest API'
@@ -139,8 +130,9 @@ stages:
   - deployment: deploy_fakerestapi
     displayName: 'Deploy REST API'
     pool:
-      vmImage: 'ubuntu-18.04'
-    environment: 'TEST'
+      vmImage: $(vmImageName)
+    environment:
+      name:  $(environmentName)
     strategy:
       runOnce:
         deploy:
@@ -148,8 +140,8 @@ stages:
           - task: AzureWebApp@1
             displayName: Deploy Azure WebApp
             inputs:
-              azureSubscription: 'azurerm-sc-eqr-app'
-              appName: 'marco-paspuel-webapi-appservice'
+              azureSubscription: $(serviceConnectionProject)
+              appName: $(webAppName)
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip
               deploymentMethod: zipDeploy
@@ -161,7 +153,7 @@ stages:
   - deployment: UItests
     displayName: 'UI Tests'
     environment:
-      name:  'TEST'
+      name:  $(environmentName)
       resourceType: VirtualMachine
     strategy:
       runOnce:
@@ -220,7 +212,7 @@ stages:
   - job: IntegrationTests
     displayName: 'Integration Tests'
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: $(vmImageName)
     steps:
       - task: NodeTool@0
         displayName: Install Node v12.X
@@ -275,7 +267,7 @@ stages:
   - job: StressTests
     displayName: 'Stress Tests'
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: $(vmImageName)
     steps:
       - task: Bash@3
         displayName: 'Install JMeter'
