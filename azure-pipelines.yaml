@@ -222,7 +222,7 @@ stages:
     environment:
       name:  'TEST'
       resourceType: VirtualMachine
-	strategy:
+    strategy:
       runOnce:
         deploy:
           steps:
@@ -281,7 +281,7 @@ stages:
     environment:
       name:  'TEST'
       resourceType: VirtualMachine
-	strategy:
+    strategy:
       runOnce:
         deploy:
           steps:
