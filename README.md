@@ -88,14 +88,12 @@ terraform {
     }
 }
 ```
-And the `access_key` in the `.azure_envs.sh` script.
-
-NOTE: The values set in `.azure_envs.sh` are required to run terraform commands from your local environment.
-There is no need to run this script if terraform runs in Azure Pipelines. To source this values in your local 
-environment run the following command.
+And the `access_key` in the `.azure_envs.sh` script. To source this values in your local environment run the following command.
 ```
 source .azure_envs.sh
 ```
+NOTE: The values set in `.azure_envs.sh` are required to run terraform commands from your local environment.
+There is no need to run this script if terraform runs in Azure Pipelines.
 
 
 Log into your Azure account
