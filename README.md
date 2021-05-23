@@ -34,10 +34,7 @@ behavior.
 
 ### Installation & Configuration
 #### Terraform in Azure
-##### 1. Configure the storage account and state backend
-To [configure the storage account and state backend](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage)
-run the following commands:
-
+##### 1. Create a Service Principal for Terraform
 Log into your Azure account
 ``` bash
 az login 
@@ -66,7 +63,9 @@ Change the parameters based on the output of the previous command. These values 
     password is the ARM_CLIENT_SECRET
     tenant is the ARM_TENANT_ID
 
-Then run the bash script [configure_terraform_storage_account.sh](configure_terraform_storage_account.sh) providing
+##### 2. Configure the storage account and state backend
+To [configure the storage account and state backend](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage)
+run the bash script [configure_terraform_storage_account.sh](configure_terraform_storage_account.sh) providing
 a resource group name, and a desired location. 
 ``` bash 
 ./configure_terraform_storage_account.sh -g "RESOURCE_GROUP_NAME" -l "LOCATION"
@@ -77,7 +76,8 @@ storage_account_name: tstate$RANDOM
 container_name: tstate
 access_key: 0000-0000-0000-0000-000000000000
 ```
-Replace the `RESOURCE_GROUP_NAME` and `storage_account_name` in the [terraform/environments/test/main.tf](terraform/environments/test/main.tf) file:
+Replace the `RESOURCE_GROUP_NAME` and `storage_account_name` in the [terraform/environments/test/main.tf](terraform/environments/test/main.tf)
+file and the `access_key` in the `.azure_envs.sh` script.
 ```
 terraform {
     backend "azurerm" {
@@ -88,7 +88,10 @@ terraform {
     }
 }
 ```
-And the `access_key` in the `.azure_envs.sh` script. To source this values in your local environment run the following command.
+```
+export ARM_ACCESS_KEY="access_key"
+```
+To source this values in your local environment run the following command:
 ```
 source .azure_envs.sh
 ```
