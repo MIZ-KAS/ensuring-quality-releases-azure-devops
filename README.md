@@ -118,7 +118,7 @@ Create a `terraform.tfvars` file inside the [test](terraform/environments/test) 
 to the newly created file. Change the values based on the outputs of the previous steps.
 
 ##### 3. Create a new Azure DevOps Project
-A detailed explanation on how to create a new Azure DevOps project can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=300s).
+A detailed explanation on how to create a new Azure DevOps project can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=253s).
 
 
 
