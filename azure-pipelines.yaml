@@ -62,6 +62,15 @@ stages:
           cp $(Agent.TempDirectory)/$(vm_public_key) ~/.ssh/$(vm_public_key)
           chmod 400 ~/.ssh/$(vm_public_key)
 
+    - task: Bash@3
+      displayName: 'Delete Terraform files from previous run'
+      inputs:
+        targetType: 'inline'
+        script: |
+          cd $(System.DefaultWorkingDirectory)/terraform/environments/test
+          rm -rf .terraform
+          rm -rf .terraform.lock.hcl
+
     - task: TerraformInstaller@0
       displayName: 'Install Terraform'
       inputs:
