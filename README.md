@@ -33,8 +33,8 @@ behavior.
 4. Log into [Azure DevOps](https://dev.azure.com/)
 
 ### Installation & Configuration
-#### Terraform in Azure
-##### 1. Create a Service Principal for Terraform
+#### 1.Terraform in Azure
+##### 1.1. Create a Service Principal for Terraform
 Log into your Azure account
 ``` bash
 az login 
@@ -63,7 +63,7 @@ Change the parameters based on the output of the previous command. These values 
     password is the ARM_CLIENT_SECRET
     tenant is the ARM_TENANT_ID
 
-##### 2. Configure the storage account and state backend
+##### 1.2. Configure the storage account and state backend
 To [configure the storage account and state backend](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage)
 run the bash script [configure_terraform_storage_account.sh](configure_terraform_storage_account.sh) providing
 a resource group name, and a desired location. 
@@ -91,6 +91,13 @@ terraform {
 ```
 export ARM_ACCESS_KEY="access_key"
 ```
+You will also need to replace this values in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
+```
+        backendAzureRmResourceGroupName: 'tstate'
+        backendAzureRmStorageAccountName: 'tstate$RANDOM'
+        backendAzureRmContainerName: 'tstate'
+        backendAzureRmKey: 'terraform.tfstate'
+```
 To source this values in your local environment run the following command:
 ```
 source .azure_envs.sh
@@ -98,27 +105,39 @@ source .azure_envs.sh
 NOTE: The values set in `.azure_envs.sh` are required to run terraform commands from your local environment.
 There is no need to run this script if terraform runs in Azure Pipelines.
 
-#### Azure DevOps
-##### 1. Create an SSH keys for authentication to a Linux VM in Azure
-To generate a public private key pair run the following command (no need to provide a pass phase):
-``` bash
-ssh-keygen -t rsa -b 4096 -f az_eqr_id_rsa
-```
-Go to your ssh directory and ensure that the keys were created:
+#### 2. Azure DevOps
+##### 2.1. Create an SSH key for authentication to a Linux VM in Azure
+To generate a public private key pair run the following command (no need to provide a passphrase):
 ``` bash
 cd ~/.ssh/
+ssh-keygen -t rsa -b 4096 -f az_eqr_id_rsa
+```
+Ensure that the keys were created:
+``` bash
 ls -ll | grep az_eqr_id_rsa
 ```
 For additional information of how to create and use SSH keys, click on the links bellow:
 - [Create and manage SSH keys for authentication to a Linux VM in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed)
 - [Creating and Using SSH Keys](https://serversforhackers.com/c/creating-and-using-ssh-keys)
 
-##### 2. Create a tfvars file to configure Terraform
+##### 2.2. Create a tfvars file to configure Terraform
 Create a `terraform.tfvars` file inside the [test](terraform/environments/test) directory and copy the content of the [terraform.tfvars.template](terraform/environments/test/terraform.tfvars.template)
 to the newly created file. Change the values based on the outputs of the previous steps.
 
-##### 3. Create a new Azure DevOps Project
-A detailed explanation on how to create a new Azure DevOps project can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=253s).
+- The `subscription_id`, `client_id`, `client_secret`, and `tenant_id` can be found in the `.azure_envs.sh` file. 
+- Ensure that the `location` and `resource_group` are the same as those provided in step 1.2 of this guide.
+- Ensure that the public key name `vm_public_key` is the same as the one created in step 2.1 of this guide.
+
+##### 2.3. Create a new Azure DevOps Project and a Service Connection
+A detailed explanation on how to create a new Azure DevOps project and service connection can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=253s).
+
+IMPORTANT: When you create the service connection make sure to select the same resource group that you provided in step 1.2
+of this guide.
+
+##### 2.4. Upload the public SSH key and tfvars to Pipelines Library
+
+
+##### 2.4. Create a new Azure Pipeline
 
 
 
