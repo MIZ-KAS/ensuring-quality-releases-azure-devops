@@ -4,6 +4,46 @@ Building a CI/CD pipeline with Azure DevOps.
 ### Status
 [![Build Status](https://dev.azure.com/marcopaspuel/ensuring-quality-releases-azure-devops/_apis/build/status/marcoBrighterAI.ensuring-quality-releases-azure-devops?branchName=main)](https://dev.azure.com/marcopaspuel/ensuring-quality-releases-azure-devops/_build/latest?definitionId=9&branchName=main)
 
+### Table of Contents
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Project Dependencies](#project-dependencies)
+- [Getting Started](#getting-started)
+- [Installation & Configuration](#installation---configuration)
+  * [1. Terraform in Azure](#1-terraform-in-azure)
+    + [1.1. Create a Service Principal for Terraform](#11-create-a-service-principal-for-terraform)
+    + [1.2. Configure the storage account and state backend](#12-configure-the-storage-account-and-state-backend)
+  * [2. Self-hosted Test Runner and REST API Infrastructure](#2-self-hosted-test-runner-and-rest-api-infrastructure)
+    + [2.1. Create an SSH key for authentication to a Linux VM in Azure](#21-create-an-ssh-key-for-authentication-to-a-linux-vm-in-azure)
+    + [2.2. Create a tfvars file to configure Terraform Variables](#22-create-a-tfvars-file-to-configure-terraform-variables)
+    + [2.3. Deploy the REST API infrastructure from your local environment with Terraform](#23-deploy-the-rest-api-infrastructure-from-your-local-environment-with-terraform)
+  * [3. Azure DevOps](#3-azure-devops)
+    + [3.1. Create a new Azure DevOps Project and Service Connections](#31-create-a-new-azure-devops-project-and-service-connections)
+    + [3.2. Add the Self-hosted Test Runner to a Pipelines Environment](#32-add-the-self-hosted-test-runner-to-a-pipelines-environment)
+    + [3.3. Deploy a Log Analytics Workspace](#33-deploy-a-log-analytics-workspace)
+    + [3.3. Upload the public SSH key and tfvars to Pipelines Library](#33-upload-the-public-ssh-key-and-tfvars-to-pipelines-library)
+    + [3.4. Create a new Azure Pipeline](#34-create-a-new-azure-pipeline)
+- [Results](#results)
+  * [Environment Creation & Deployment](#environment-creation---deployment)
+    + [Provisioning Infrastructure](#provisioning-infrastructure)
+      - [Log output of Terraform Apply when executed by the CI/CD Pipeline](#log-output-of-terraform-apply-when-executed-by-the-ci-cd-pipeline)
+    + [Deploy REST API](#deploy-rest-api)
+      - [Log output of Deploy Azure WebApp](#log-output-of-deploy-azure-webapp)
+      - [Deployed REST API](#deployed-rest-api)
+  * [Test](#test)
+    + [UI Test](#ui-test)
+      - [Log output of Run UI Tests with Selenium on VM agent](#log-output-of-run-ui-tests-with-selenium-on-vm-agent)
+    + [Integration Tests](#integration-tests)
+      - [Log output of Run Newman Regression Test](#log-output-of-run-newman-regression-test)
+      - [Log output of Run Newman Validation Test](#log-output-of-run-newman-validation-test)
+      - [Newman Tests Results](#newman-tests-results)
+    + [Stress Tests](#stress-tests)
+      - [Log output of Run JMeter Stress Tests](#log-output-of-run-jmeter-stress-tests)
+      - [Log output of Run JMeter Endurance Tests](#log-output-of-run-jmeter-endurance-tests)
+  * [Successful execution of the CI/CD Pipeline](#successful-execution-of-the-ci-cd-pipeline)
+  * [Log Analytics Workspace Query](#log-analytics-workspace-query)
+
+
 ### Introduction
 
 This project uses **Azure DevOps** to build a CI/CD pipeline that creates disposable test environments and runs a variety of
