@@ -23,7 +23,7 @@ Building a CI/CD pipeline with Azure DevOps.
     + [3.3. Deploy a Log Analytics Workspace](#33-deploy-a-log-analytics-workspace)
     + [3.3. Upload the public SSH key and tfvars to Pipelines Library](#33-upload-the-public-ssh-key-and-tfvars-to-pipelines-library)
     + [3.4. Create a new Azure Pipeline](#34-create-a-new-azure-pipeline)
-- [Results](#automated-testing)
+- [Automated Testing](#automated-testing)
   * [Environment Creation & Deployment](#environment-creation---deployment)
     + [Provisioning Infrastructure](#provisioning-infrastructure)
       - [Log output of Terraform Apply when executed by the CI/CD Pipeline](#log-output-of-terraform-apply-when-executed-by-the-ci-cd-pipeline)
