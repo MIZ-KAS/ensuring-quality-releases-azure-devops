@@ -147,10 +147,8 @@ terraform apply "solution.plan"
 ```
 
 If everything runs correctly you should be able to see the resources been created. You can also check the creation of 
-the resources in the [azure portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) under
-```
-Home > Resource groups > "RESOURCE_GROUP_NAME"
-```
+the resources in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) under 
+`Home > Resource groups > "RESOURCE_GROUP_NAME"`
 
 #### 3. Azure DevOps
 ##### 3.1. Create a new Azure DevOps Project and Service Connections
@@ -174,29 +172,53 @@ serviceConnectionWebApp: 'service-connection-webapp'
 ```
 - f) Make sure that the webAppName matches the name provided in the `terraform.tfvars` file.
 
-##### 3.2. Add the newly created vm to an Environment
-Connect to the Virtual Machine. Use the ssh key created in step 2.1 of this guide.
-The public IP can be found in the Azure Portal under Resources/VirtualMachine:
+##### 3.2. Add the Self-hosted Test Runner to a Pipelines Environment
+- a) Create a New Environment in Azure Pipelines. From inside your project in Azure DevOps go to:
+`Pipelines > Environments > New environment`
+- b) Give the environment a name e.g. `test`, then select `Virtual machines > Next`.
+- c) From the dropdown select `Lunix` and copy the `Registration script`
+- d) From a local terminal connect to the Virtual Machine.
+Use the ssh key created in step 2.1 of this guide. The public IP can be found in the Azure Portal under
+`Home > Resource groups > "RESOURCE_GROUP_NAME" > "Virtual machine"`
 ``` bash
 ssh -o "IdentitiesOnly=yes" -i ~/.ssh/az_eqr_id_rsa marco@PublicIP
 ```
-Go to environment in azure pipelines and add a new resource. Copy the registration script and run it inside the VM.
-Add a tag if you desire (optional).
+- e) Once you are logged into the VM paste the `Registration script` and run it.
+- f) (optional) Add a tag when promoted.
 
 ##### 3.3. Deploy a Log Analytics Workspace
-To deploy a new log analytics workspace run the [deploy_log_analytics_workspace.sh](analytics/deploy_log_analytics_workspace.sh)
-script. Make sure to set a resource group and provide a workspace name when promoted such as `ensuring-quality-releases-log`.
+- a) Deploy a new log analytics workspace
+Run the [deploy_log_analytics_workspace.sh](analytics/deploy_log_analytics_workspace.sh)
+script. Make sure to set a resource group and provide a workspace name when promoted, e.g. `ensuring-quality-releases-log`.
 ``` bash
 cd analytics
 ./deploy_log_analytics_workspace.sh
 ```
-Set the workspace ID and the primary in the environment variables of the azure pipeline. Both ID and primary key of the
-Log Analytics Workspace can be found in the Settings >> Agents management of the Log Analytics workspace in the Azure Portal.
-They can be set as secret variables for the pipeline:
-Pipelines >> YourPipeline >> Edit >> Variables >> New Variable >> put the name and the value and >> Save
-
+- b) From a local terminal connect to the Virtual Machine as described above.
+- c) Once you are **logged into the VM** run the following commands:
+``` bash
+wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
+sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
+sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
+```
+IMPORTANT: The AZURE_LOG_ANALYTICS_ID and AZURE_LOG_ANALYTICS_PRIMARY_KEY can be found in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups).
+`Home > Resource groups > "RESOURCE_GROUP_NAME" > "Log Analytics workspace" > Agents management`
+They can also be set as secret variables for the pipeline:
+`Pipelines > YourPipeline > Edit > Variables > New Variable > put the name and the value and > Save`
 
 ##### 3.3. Upload the public SSH key and tfvars to Pipelines Library
-
+- a) Add a secure file to Azure Pipelines. From inside your project in Azure DevOps go to:
+`Pipelines > Library > Secure files > + Secure file`
+- b) Add the **public ssh key** and the **terraform.tfvars** files to the secure files' library.
+- c) Give the pipeline permissions to use the file:
+`"SECURE_FILE_NAME" > Authorize for use in all pipelines`
 
 ##### 3.4. Create a new Azure Pipeline
+- a) From inside your project in Azure DevOps go to:
+`Pipelines > Pipelines > Create new pipeline`
+- b) Select your project from GitHub
+- c) Select `Existing Azure Pipelines YAML file`
+- d) Select the `main` branch and select the path to the [azure-pipelines.yaml](azure-pipelines.yaml) file.
+- e) Select `Continue` and then `Run pipeline`
+
+If everything goes well you should be able to see the pipeline running throughout the different stages.
