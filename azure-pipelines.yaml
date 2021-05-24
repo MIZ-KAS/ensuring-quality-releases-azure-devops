@@ -11,7 +11,7 @@ trigger:
 variables:
   # Azure Resource Manager service connection for pipelines
   serviceConnectionTerraform: 'eqr-azurerm-sc'
-  serviceConnectionProject: 'eqr-azurerm-sc'
+  serviceConnectionProject: 'eqr-azurerm-sc-app'
 
   # Web app name
   webAppName: 'marco-paspuel-webapi-appservice'
@@ -82,7 +82,7 @@ stages:
         provider: 'azurerm'
         command: 'init'
         backendServiceArm: $(serviceConnectionTerraform)
-        backendAzureRmResourceGroupName: 'ensuring-quality-releases-rg'
+        backendAzureRmResourceGroupName: 'tstate'
         backendAzureRmStorageAccountName: 'tstate15813'
         backendAzureRmContainerName: 'tstate'
         backendAzureRmKey: 'terraform.tfstate'
