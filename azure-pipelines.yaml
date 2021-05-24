@@ -82,7 +82,7 @@ stages:
         provider: 'azurerm'
         command: 'init'
         backendServiceArm: $(serviceConnectionTerraform)
-        backendAzureRmResourceGroupName: 'tstate'
+        backendAzureRmResourceGroupName: 'ensuring-quality-releases-rg'
         backendAzureRmStorageAccountName: 'tstate15813'
         backendAzureRmContainerName: 'tstate'
         backendAzureRmKey: 'terraform.tfstate'

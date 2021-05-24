@@ -93,7 +93,7 @@ export ARM_ACCESS_KEY="access_key"
 ```
 You will also need to replace this values in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
 ```
-        backendAzureRmResourceGroupName: 'tstate'
+        backendAzureRmResourceGroupName: "RESOURCE_GROUP_NAME"
         backendAzureRmStorageAccountName: 'tstate$RANDOM'
         backendAzureRmContainerName: 'tstate'
         backendAzureRmKey: 'terraform.tfstate'
