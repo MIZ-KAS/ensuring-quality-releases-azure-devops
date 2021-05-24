@@ -83,7 +83,7 @@ stages:
         command: 'init'
         backendServiceArm: $(serviceConnectionTerraform)
         backendAzureRmResourceGroupName: 'tstate'
-        backendAzureRmStorageAccountName: 'tstate15813'
+        backendAzureRmStorageAccountName: 'tstate17096'
         backendAzureRmContainerName: 'tstate'
         backendAzureRmKey: 'terraform.tfstate'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
