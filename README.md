@@ -222,3 +222,40 @@ They can also be set as secret variables for the pipeline:
 - e) Select `Continue` and then `Run pipeline`
 
 If everything goes well you should be able to see the pipeline running throughout the different stages.
+
+### Results
+#### Environment Creation & Deployment
+##### Provisioning Infrastructure
+###### Log output of Terraform Apply when executed by the CI/CD Pipeline
+![pycharm1](images/1_terraform_apply.png)
+
+##### Deploy REST API
+###### Log output of Deploy Azure WebApp
+![pycharm2](images/2_deploy_azure_webapp.png)
+###### Deployed REST API
+![pycharm3](images/3_fake_rest_api.png)
+
+#### Test
+##### UI Test
+###### Log output of Run UI Tests with Selenium on VM agent
+![pycharm4](images/4_run_ui_test_selenium.png)
+
+##### Integration Tests
+###### Log output of Run Newman Regression Test
+![pycharm4](images/5_newman_regresing_test.png)
+
+###### Log output of Run Newman Validation Test
+![pycharm4](images/6_newman_validation_tests.png)
+
+###### Newman Tests Results
+![pycharm4](images/6_1_newman_test_results.png)
+
+##### Stress Tests
+###### Log output of Run JMeter Stress Tests
+![pycharm4](images/7_jmeter_stress_tests.png)
+
+###### Log output of Run JMeter Endurance Tests
+![pycharm4](images/8_jmeter_endurance_tests.png)
+
+#### Successful execution of the CI/CD Pipeline
+![pycharm4](images/9_excecution_of_the_pipeline.png)
