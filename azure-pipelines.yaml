@@ -10,8 +10,8 @@ trigger:
 
 variables:
   # Azure Resource Manager service connection for pipelines
-  serviceConnectionTerraform: 'eqr-azurerm-sc'
-  serviceConnectionProject: 'eqr-azurerm-sc'
+  serviceConnectionTerraform: 'service-connection-terraform'
+  serviceConnectionWebApp: 'service-connection-webapp'
 
   # Web app name
   webAppName: 'marco-paspuel-webapi-appservice'
@@ -82,8 +82,8 @@ stages:
         provider: 'azurerm'
         command: 'init'
         backendServiceArm: $(serviceConnectionTerraform)
-        backendAzureRmResourceGroupName: 'tstate'
-        backendAzureRmStorageAccountName: 'tstate17096'
+        backendAzureRmResourceGroupName: 'eqr-tf-storage-account-rg'
+        backendAzureRmStorageAccountName: 'tstate2836'
         backendAzureRmContainerName: 'tstate'
         backendAzureRmKey: 'terraform.tfstate'
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
@@ -152,7 +152,7 @@ stages:
           - task: AzureWebApp@1
             displayName: Deploy Azure WebApp
             inputs:
-              azureSubscription: $(serviceConnectionProject)
+              azureSubscription: $(serviceConnectionWebApp)
               appName: $(webAppName)
               appType: webApp
               package: $(Pipeline.Workspace)/drop-fakerestapi/fakerestapi-$(Build.BuildId).zip

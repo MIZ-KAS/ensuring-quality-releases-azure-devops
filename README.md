@@ -33,7 +33,7 @@ behavior.
 4. Log into [Azure DevOps](https://dev.azure.com/)
 
 ### Installation & Configuration
-#### 1.Terraform in Azure
+#### 1. Terraform in Azure
 ##### 1.1. Create a Service Principal for Terraform
 Log into your Azure account
 ``` bash
@@ -125,19 +125,57 @@ Create a `terraform.tfvars` file inside the [test](terraform/environments/test) 
 to the newly created file. Change the values based on the outputs of the previous steps.
 
 - The `subscription_id`, `client_id`, `client_secret`, and `tenant_id` can be found in the `.azure_envs.sh` file. 
-- Ensure that the `location` and `resource_group` are the same as those provided in step 1.2 of this guide.
+- Set your desired `location` and `resource_group` for the infrastructure. 
 - Ensure that the public key name `vm_public_key` is the same as the one created in step 2.1 of this guide.
 
-##### 2.3. Create a new Azure DevOps Project and a Service Connection
+##### 2.3. Deploy the infrastructure from your local environment with Terraform
+Run Terraform plan 
+``` bash
+cd terraform/environments/test
+```
+``` bash
+terraform init
+```
+``` bash
+terraform plan -out solution.plan
+```
+After running the plan you should be able to see all the resources that will be created.
+
+Run Terraform apply to deploy the infrastructure.
+``` bash
+terraform apply "solution.plan"
+```
+
+If everything runs correctly you should be able to see the resources been created in the [azure portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups).
+
+
+
+##### 3.1. Create a new Azure DevOps Project and a Service Connection
 A detailed explanation on how to create a new Azure DevOps project and service connection can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=253s).
 
-IMPORTANT: When you create the service connection make sure to select the same resource group that you provided in step 1.2
-of this guide.
+IMPORTANT: You will need to create two service connections:
+- `serviceConnectionTerraform` is created using the same resource group that you provided in step 1.2 of this guide.
+- `serviceConnectionWebApp` is created using the resource group that you provided in `terraform.tfvars` file.
+- Give this two connection representative name and replace them in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
+``` 
+  serviceConnectionTerraform: 'service-connection-terraform'
+  serviceConnectionWebApp: 'service-connection-webapp'
+```
 
-##### 2.4. Upload the public SSH key and tfvars to Pipelines Library
+##### 3.2. Add the newly created vm to an Environment
+Connect to the Virtual Machine. Use the ssh key created in step 2.1 of this guide.
+The public IP can be found in the Azure Portal under Resources/VirtualMachine:
+``` bash
+ssh -o "IdentitiesOnly=yes" -i ~/.ssh/az_eqr_id_rsa marco@PublicIP
+```
+Go to environment in azure pipelines and add a new resource. Copy the registration script and run it inside the VM.
+Add a tag if you desire (optional).
 
 
-##### 2.4. Create a new Azure Pipeline
+##### 3.3. Upload the public SSH key and tfvars to Pipelines Library
+
+
+##### 3.4. Create a new Azure Pipeline
 
 
 
