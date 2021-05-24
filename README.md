@@ -161,6 +161,7 @@ IMPORTANT: You will need to create two service connections:
   serviceConnectionTerraform: 'service-connection-terraform'
   serviceConnectionWebApp: 'service-connection-webapp'
 ```
+- Also make sure that the webAppName matches the name provided in the `terraform.tfvars` file.
 
 ##### 3.2. Add the newly created vm to an Environment
 Connect to the Virtual Machine. Use the ssh key created in step 2.1 of this guide.
