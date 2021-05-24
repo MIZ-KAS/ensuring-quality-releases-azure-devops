@@ -2,7 +2,7 @@
 Building a CI/CD pipeline with Azure DevOps.
 
 ### Status
-[![Build Status](https://dev.azure.com/marcopaspuel/ensuring-quality-releases/_apis/build/status/marcoBrighterAI.azure-devops-ensuring-quality-releases?branchName=main)](https://dev.azure.com/marcopaspuel/ensuring-quality-releases/_build/latest?definitionId=7&branchName=main)
+[![Build Status](https://dev.azure.com/marcopaspuel/ensuring-quality-releases-azure-devops/_apis/build/status/marcoBrighterAI.ensuring-quality-releases-azure-devops?branchName=main)](https://dev.azure.com/marcopaspuel/ensuring-quality-releases-azure-devops/_build/latest?definitionId=9&branchName=main)
 
 ### Introduction
 
@@ -199,12 +199,16 @@ cd analytics
 ``` bash
 wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
 sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
-sudo /opt/microsoft/omsagent/bin/service_control restart ${AZURE_LOG_ANALYTICS_ID}
 ```
 IMPORTANT: The AZURE_LOG_ANALYTICS_ID and AZURE_LOG_ANALYTICS_PRIMARY_KEY can be found in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups).
 `Home > Resource groups > "RESOURCE_GROUP_NAME" > "Log Analytics workspace" > Agents management`
-They can also be set as secret variables for the pipeline:
-`Pipelines > YourPipeline > Edit > Variables > New Variable > put the name and the value and > Save`
+There you will also find the command to `Download and onboard agent for Linux`.
+
+- d) [Collect custom logs with Log Analytics agent in Azure Monitor](https://docs.microsoft.com/en-us/azure/azure-monitor/agents/data-sources-custom-logs)
+
+For more information on how to create and install Log Analytic agents click the links bellow:
+- [Create a Log Analytics workspace with Azure CLI 2.0](https://docs.microsoft.com/en-us/azure/azure-monitor/logs/quick-create-workspace-cli)
+- [Install Log Analytics agent on Linux computers](https://docs.microsoft.com/en-us/azure/azure-monitor/agents/agent-linux)
 
 ##### 3.3. Upload the public SSH key and tfvars to Pipelines Library
 - a) Add a secure file to Azure Pipelines. From inside your project in Azure DevOps go to:
@@ -242,20 +246,23 @@ If everything goes well you should be able to see the pipeline running throughou
 
 ##### Integration Tests
 ###### Log output of Run Newman Regression Test
-![pycharm4](images/5_newman_regresing_test.png)
+![pycharm5](images/5_newman_regresing_test.png)
 
 ###### Log output of Run Newman Validation Test
-![pycharm4](images/6_newman_validation_tests.png)
+![pycharm6](images/6_newman_validation_tests.png)
 
 ###### Newman Tests Results
-![pycharm4](images/6_1_newman_test_results.png)
+![pycharm6_1](images/6_1_newman_test_results.png)
 
 ##### Stress Tests
 ###### Log output of Run JMeter Stress Tests
-![pycharm4](images/7_jmeter_stress_tests.png)
+![pycharm7](images/7_jmeter_stress_tests.png)
 
 ###### Log output of Run JMeter Endurance Tests
-![pycharm4](images/8_jmeter_endurance_tests.png)
+![pycharm8](images/8_jmeter_endurance_tests.png)
 
 #### Successful execution of the CI/CD Pipeline
-![pycharm4](images/9_excecution_of_the_pipeline.png)
+![pycharm9](images/9_excecution_of_the_pipeline.png)
+
+#### Log Analytics Workspace Query
+![pycharm10](images/10_log_analylics_workspace.png)
