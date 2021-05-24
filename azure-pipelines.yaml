@@ -59,8 +59,8 @@ stages:
         targetType: 'inline'
         script: |
           mkdir ~/.ssh/
-          cp $(Agent.TempDirectory)/azure_eqr_id_rsa.pub ~/.ssh/azure_eqr_id_rsa.pub
-          chmod 400 ~/.ssh/azure_eqr_id_rsa.pub
+          cp $(Agent.TempDirectory)/$(vm_public_key) ~/.ssh/$(vm_public_key)
+          chmod 400 ~/.ssh/$(vm_public_key)
 
     - task: TerraformInstaller@0
       displayName: 'Install Terraform'
