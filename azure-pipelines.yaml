@@ -22,6 +22,9 @@ variables:
   # Environment name
   environmentName: 'TEST'
 
+  # VM Public Key
+  vm_public_key: 'az_eqr_id_rsa.pub'
+
 stages:
 - stage: provision
   displayName: 'Provision'
@@ -48,7 +51,7 @@ stages:
       displayName: 'Download public ssh Key'
       name: eqr_vm_public_key
       inputs:
-        secureFile: 'azure_eqr_id_rsa.pub'
+        secureFile: $(vm_public_key)
 
     - task: Bash@3
       displayName: 'Copy public ssh key to vm'
