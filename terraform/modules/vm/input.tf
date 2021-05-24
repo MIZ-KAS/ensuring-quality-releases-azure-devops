@@ -5,7 +5,7 @@ variable "public_ip_address_id" {}
 variable "subnet_id" {}
 
 
-variable "application_type" {}
+variable "webapp_name" {}
 variable "resource_type" {}
 
 variable "vm_admin_username" {}

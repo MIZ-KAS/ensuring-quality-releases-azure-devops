@@ -14,7 +14,7 @@ variables:
   serviceConnectionWebApp: 'service-connection-webapp'
 
   # Web app name
-  webAppName: 'ensuring-quality-releases-marco-webapi-appservice'
+  webAppName: 'ensuring-quality-releases-marco-webapi'
 
   # Agent VM image name
   vmImageName: 'ubuntu-18.04'

@@ -2,7 +2,7 @@
 variable "location" {}
 variable "resource_group" {}
 
-variable "application_type" {}
+variable "webapp_name" {}
 variable "resource_type" {}
 
 # Tags

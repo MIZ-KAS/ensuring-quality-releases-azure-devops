@@ -15,7 +15,7 @@ behavior.
 
 ### Prerequisites
 - [Azure Account](https://portal.azure.com) 
-- [Azure command line interface](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+- [Azure Command Line Interface](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 - [Azure DevOps Account](https://dev.azure.com/) 
 
 ### Project Dependencies
@@ -93,10 +93,10 @@ export ARM_ACCESS_KEY="access_key"
 ```
 You will also need to replace this values in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
 ```
-        backendAzureRmResourceGroupName: "RESOURCE_GROUP_NAME"
-        backendAzureRmStorageAccountName: 'tstate$RANDOM'
-        backendAzureRmContainerName: 'tstate'
-        backendAzureRmKey: 'terraform.tfstate'
+backendAzureRmResourceGroupName: "RESOURCE_GROUP_NAME"
+backendAzureRmStorageAccountName: 'tstate$RANDOM'
+backendAzureRmContainerName: 'tstate'
+backendAzureRmKey: 'terraform.tfstate'
 ```
 To source this values in your local environment run the following command:
 ```
@@ -105,7 +105,7 @@ source .azure_envs.sh
 NOTE: The values set in `.azure_envs.sh` are required to run terraform commands from your local environment.
 There is no need to run this script if terraform runs in Azure Pipelines.
 
-#### 2. Azure DevOps
+#### 2. Self-hosted Test Runner and REST API Infrastructure
 ##### 2.1. Create an SSH key for authentication to a Linux VM in Azure
 To generate a public private key pair run the following command (no need to provide a passphrase):
 ``` bash
@@ -120,7 +120,7 @@ For additional information of how to create and use SSH keys, click on the links
 - [Create and manage SSH keys for authentication to a Linux VM in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/create-ssh-keys-detailed)
 - [Creating and Using SSH Keys](https://serversforhackers.com/c/creating-and-using-ssh-keys)
 
-##### 2.2. Create a tfvars file to configure Terraform
+##### 2.2. Create a tfvars file to configure Terraform Variables
 Create a `terraform.tfvars` file inside the [test](terraform/environments/test) directory and copy the content of the [terraform.tfvars.template](terraform/environments/test/terraform.tfvars.template)
 to the newly created file. Change the values based on the outputs of the previous steps.
 
@@ -128,7 +128,7 @@ to the newly created file. Change the values based on the outputs of the previou
 - Set your desired `location` and `resource_group` for the infrastructure. 
 - Ensure that the public key name `vm_public_key` is the same as the one created in step 2.1 of this guide.
 
-##### 2.3. Deploy the infrastructure from your local environment with Terraform
+##### 2.3. Deploy the REST API infrastructure from your local environment with Terraform
 Run Terraform plan 
 ``` bash
 cd terraform/environments/test
@@ -146,22 +146,33 @@ Run Terraform apply to deploy the infrastructure.
 terraform apply "solution.plan"
 ```
 
-If everything runs correctly you should be able to see the resources been created in the [azure portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups).
+If everything runs correctly you should be able to see the resources been created. You can also check the creation of 
+the resources in the [azure portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) under
+```
+Home > Resource groups > "RESOURCE_GROUP_NAME"
+```
 
-
-
-##### 3.1. Create a new Azure DevOps Project and a Service Connection
-A detailed explanation on how to create a new Azure DevOps project and service connection can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=253s).
+#### 3. Azure DevOps
+##### 3.1. Create a new Azure DevOps Project and Service Connections
+- a) Go to [Azure DevOps](https://dev.azure.com/)
+- b) Click on `New Project`
+- c) Give the project a name, a description and click `Create`
+- d) Create a new Service Connection `Project settings > Service connections > New service connection`
+- e) Inside new service connection select `Azure Resource Manager > Service principal (automatic)`
+- f) Select a Resource group, give the connection a name a description and click `Save`.
 
 IMPORTANT: You will need to create two service connections:
-- `serviceConnectionTerraform` is created using the same resource group that you provided in step 1.2 of this guide.
-- `serviceConnectionWebApp` is created using the resource group that you provided in `terraform.tfvars` file.
-- Give this two connection representative name and replace them in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
+- `service-connection-terraform` is created using the same resource group that you provided in step 1.2 of this guide.
+- `service-connection-webapp` is created using the resource group that you provided in `terraform.tfvars` file.
+
+A detailed explanation on how to create a new Azure DevOps project and service connection can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=253s).
+
+- g) Make sure that the name of the service connections match the names provided in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
 ``` 
-  serviceConnectionTerraform: 'service-connection-terraform'
-  serviceConnectionWebApp: 'service-connection-webapp'
+serviceConnectionTerraform: 'service-connection-terraform'
+serviceConnectionWebApp: 'service-connection-webapp'
 ```
-- Also make sure that the webAppName matches the name provided in the `terraform.tfvars` file.
+- f) Make sure that the webAppName matches the name provided in the `terraform.tfvars` file.
 
 ##### 3.2. Add the newly created vm to an Environment
 Connect to the Virtual Machine. Use the ssh key created in step 2.1 of this guide.
@@ -189,29 +200,3 @@ Pipelines >> YourPipeline >> Edit >> Variables >> New Variable >> put the name a
 
 
 ##### 3.4. Create a new Azure Pipeline
-
-
-
-Log into your Azure account
-``` bash
-    az login 
-```
-
-``` bash 
-    az account set --subscription="SUBSCRIPTION_ID"
-```
-Create Service Principle
-``` bash
-    az ad sp create-for-rbac --name TerraformSP-EQR --role="Contributor" --scopes="/subscriptions/SUBSCRIPTION_ID"
-```
-
-Configure the storage account for terraform 
-``` bash
-    ./config_storage_account.sh
-```
-
-Login to the newly created vm
-``` bash
-    ssh -i ~./ssh/azure_eqr_id_rsa marco@13.69.60.241
-    ssh -o "IdentitiesOnly=yes" -i ~/.ssh/azure_eqr_id_rsa marco@40.68.13.148
-```

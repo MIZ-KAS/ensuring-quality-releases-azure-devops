@@ -1,10 +1,10 @@
 resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.application_type}-${var.resource_type}"
+  name                = "${var.webapp_name}-${var.resource_type}"
   location            = var.location
   resource_group_name = var.resource_group
 
   security_rule {
-    name                       = "${var.application_type}-${var.resource_type}-5000"
+    name                       = "${var.webapp_name}-${var.resource_type}-5000"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"

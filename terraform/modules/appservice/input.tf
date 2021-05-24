@@ -1,7 +1,7 @@
 # Resource Group/Location
 variable "location" {}
 
-variable "application_type" {}
+variable "webapp_name" {}
 variable "resource_type" {}
 variable "resource_group" {}
 
