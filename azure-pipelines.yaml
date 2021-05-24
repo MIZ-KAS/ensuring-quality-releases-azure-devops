@@ -10,8 +10,8 @@ trigger:
 
 variables:
   # Azure Resource Manager service connection for pipelines
-  serviceConnectionTerraform: 'azurerm-sc-eqr'
-  serviceConnectionProject: 'azurerm-sc-eqr-app'
+  serviceConnectionTerraform: 'eqr-azurerm-sc'
+  serviceConnectionProject: 'eqr-azurerm-sc'
 
   # Web app name
   webAppName: 'marco-paspuel-webapi-appservice'
