@@ -11,10 +11,10 @@
         "location": {
             "type": "String",
             "allowedValues": [
-              "eastus",
-              "westus"
+              "westeurope",
+              "westeurope"
             ],
-            "defaultValue": "eastus",
+            "defaultValue": "westeurope",
             "metadata": {
               "description": "Specifies the location in which to create the workspace."
             }

@@ -172,6 +172,18 @@ ssh -o "IdentitiesOnly=yes" -i ~/.ssh/az_eqr_id_rsa marco@PublicIP
 Go to environment in azure pipelines and add a new resource. Copy the registration script and run it inside the VM.
 Add a tag if you desire (optional).
 
+##### 3.3. Deploy a Log Analytics Workspace
+To deploy a new log analytics workspace run the [deploy_log_analytics_workspace.sh](analytics/deploy_log_analytics_workspace.sh)
+script. Make sure to set a resource group and provide a workspace name when promoted such as `ensuring-quality-releases-log`.
+``` bash
+cd analytics
+./deploy_log_analytics_workspace.sh
+```
+Set the workspace ID and the primary in the environment variables of the azure pipeline. Both ID and primary key of the
+Log Analytics Workspace can be found in the Settings >> Agents management of the Log Analytics workspace in the Azure Portal.
+They can be set as secret variables for the pipeline:
+Pipelines >> YourPipeline >> Edit >> Variables >> New Variable >> put the name and the value and >> Save
+
 
 ##### 3.3. Upload the public SSH key and tfvars to Pipelines Library
 
