@@ -272,19 +272,20 @@ If everything goes well you should be able to see the pipeline running throughou
 - a) From the [Azure Portal](https://portal.azure.com) go to:<br/>
 `Home > Resource groups > "RESOURCE_GROUP_NAME" > "App Service Name" > Monitoring > Alerts`
 - b) Click on `New alert rule`
-- c) Double-check that you have the correct resource to make the alert for and then click `Add` under CONDITION
+- c) Double-check that you have the correct resource to make the alert for.
+- d) Under `Condition` click `Add condition`
 - d) Choose a condition e.g. `Http 404`
 - e) Set the `Threshold value` to e.g. `1`. (You will get altered after two consecutive HTTP 404 errors)
 - f) Click `Done`
 
 ##### 4.2. Create a new action group for the App Service
-- a) In the same page, go to the `ACTION GROUPS` section and click `Create`
+- a) In the same page, go to the `Actions` section, click `Add action groups` and then `Create action group`
 - b) Give the action group a name e.g. `http404`
-- c) Add an **Action name** e.g. `HTTP 404 and choose `email` in **Action Type**.
+- c) Add an **Action name** e.g. `HTTP 404` and choose `email` in **Action Type**.
 - d) Provide your email and then click `OK`
 
 ##### 4.3. Add alter details
-- a) In the same page, go to the `ALERT DETAILS` section and add am `Alert rule name` e.g. `HTTP 404 greater than 1`
+- a) In the same page, go to the `Alert rule details` section and add an `Alert rule name` e.g. `HTTP 404 greater than 1`
 - b) Provide a description and select a -Severity`.
 - c) Click `Create alter rule`
 
