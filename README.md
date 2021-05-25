@@ -326,10 +326,10 @@ If everything goes well you should be able to see the pipeline running throughou
 #### Successful execution of the CI/CD Pipeline
 ![pycharm9](images/9_excecution_of_the_pipeline.png)
 
-#### Log Analytics Workspace Query
-![pycharm10](images/10_log_analylics_workspace.png)
+### Monitoring & Observability
+#### Alert rule in the Azure Portal
+![pycharm11](images/11_1_alert_rule.png)
 
-### Observability and Monitoring
 #### Email received when the 404 alert was triggered
 ![pycharm11](images/11_404_alert_email.png)
 
@@ -337,3 +337,6 @@ If everything goes well you should be able to see the pipeline running throughou
 ![pycharm11](images/12_app_serivice_metrics.png)
 
 ![pycharm11](images/12_1_appservice_metrics.png)
+
+#### Log Analytics Workspace Query
+![pycharm10](images/10_log_analylics_workspace.png)
