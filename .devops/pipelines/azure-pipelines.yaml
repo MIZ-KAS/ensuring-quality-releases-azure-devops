@@ -21,7 +21,7 @@ variables:
   vmImageName: 'ubuntu-18.04'
 
   # Environment name
-  environmentName: 'TEST'
+  environmentName: 'test'
 
   # VM Public Key
   vm_public_key: 'az_eqr_id_rsa.pub'
