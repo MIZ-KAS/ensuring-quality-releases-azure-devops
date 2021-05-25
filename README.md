@@ -105,10 +105,10 @@ Change the parameters based on the output of the previous command. These values 
 
 ##### 1.2. Configure the storage account and state backend
 To [configure the storage account and state backend](https://docs.microsoft.com/en-us/azure/developer/terraform/store-state-in-azure-storage)
-run the bash script [configure_terraform_storage_account.sh](configure_terraform_storage_account.sh) providing
+run the bash script [config_storage_account.sh](terraform/config_storage_account.sh) providing
 a resource group name, and a desired location. 
 ``` bash 
-./configure_terraform_storage_account.sh -g "RESOURCE_GROUP_NAME" -l "LOCATION"
+./terraform/config_storage_account.sh -g "RESOURCE_GROUP_NAME" -l "LOCATION"
 ```
 This script will output 3 values:
 ``` bash 
@@ -131,7 +131,7 @@ terraform {
 ```
 export ARM_ACCESS_KEY="access_key"
 ```
-You will also need to replace this values in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
+You will also need to replace this values in the [azure-pipelines.yaml](.devops/pipelines/azure-pipelines.yaml) file.
 ```
 backendAzureRmResourceGroupName: "RESOURCE_GROUP_NAME"
 backendAzureRmStorageAccountName: 'tstate$RANDOM'
@@ -205,7 +205,7 @@ IMPORTANT: You will need to create two service connections:
 
 A detailed explanation on how to create a new Azure DevOps project and service connection can be found [here](https://www.youtube.com/watch?v=aIvl4NxCWwU&t=253s).
 
-- g) Make sure that the name of the service connections match the names provided in the [azure-pipelines.yaml](azure-pipelines.yaml) file.
+- g) Make sure that the name of the service connections match the names provided in the [azure-pipelines.yaml](.devops/pipelines/azure-pipelines.yaml) file.
 ``` 
 serviceConnectionTerraform: 'service-connection-terraform'
 serviceConnectionWebApp: 'service-connection-webapp'
@@ -262,7 +262,7 @@ For more information on how to create and install Log Analytic agents click the 
 `Pipelines > Pipelines > Create new pipeline`
 - b) Select your project from GitHub
 - c) Select `Existing Azure Pipelines YAML file`
-- d) Select the `main` branch and select the path to the [azure-pipelines.yaml](azure-pipelines.yaml) file.
+- d) Select the `main` branch and select the path to the [azure-pipelines.yaml](.devops/pipelines/azure-pipelines.yaml) file.
 - e) Select `Continue` and then `Run pipeline`
 
 If everything goes well you should be able to see the pipeline running throughout the different stages.
