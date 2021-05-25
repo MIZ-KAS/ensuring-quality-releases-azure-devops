@@ -240,7 +240,7 @@ cd analytics
 wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
 sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
 ```
-IMPORTANT: The `AZURE_LOG_ANALYTICS_ID` and `AZURE_LOG_ANALYTICS_PRIMARY_KEY` can be found in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups). <br/>
+IMPORTANT: The `AZURE_LOG_ANALYTICS_ID` and `AZURE_LOG_ANALYTICS_PRIMARY_KEY` can be found in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) under: <br/>
 `Home > Resource groups > "RESOURCE_GROUP_NAME" > "Log Analytics workspace" > Agents management` <br/>
 There you will also find the command to `Download and onboard agent for Linux`.
 
