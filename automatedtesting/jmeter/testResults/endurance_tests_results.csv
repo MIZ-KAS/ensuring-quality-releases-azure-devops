@@ -1,0 +1,3 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1621941062943,1733,GET Books,200,OK,Endurance Test 1-2,text,true,,97539,167,2,2,https://ensuring-quality-releases-marco-webapi.azurewebsites.net/api/Books,1176,0,933
+1621941062442,2244,GET Books,200,OK,Endurance Test 1-1,text,true,,97539,167,1,1,https://ensuring-quality-releases-marco-webapi.azurewebsites.net/api/Books,1684,0,1434
