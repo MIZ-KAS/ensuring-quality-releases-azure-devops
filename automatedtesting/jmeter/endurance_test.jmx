@@ -172,7 +172,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="hostname" elementType="Argument">
             <stringProp name="Argument.name">hostname</stringProp>
-            <stringProp name="Argument.value">marco-paspuel-webapi-appservice.azurewebsites.net</stringProp>
+            <stringProp name="Argument.value">ensuring-quality-releases-marco-webapi.azurewebsites.net</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
