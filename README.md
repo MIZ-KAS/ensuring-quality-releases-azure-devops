@@ -265,7 +265,28 @@ For more information on how to create and install Log Analytic agents click the 
 - d) Select the `main` branch and select the path to the [azure-pipelines.yaml](.devops/pipelines/azure-pipelines.yaml) file.
 - e) Select `Continue` and then `Run pipeline`
 
-If everything goes well you should be able to see the pipeline running throughout the different stages.
+If everything goes well you should be able to see the pipeline running throughout the different stages. See images below.
+
+#### 4. Azure Monitor
+##### 4.1. Create a new alter for the App Service
+- a) From the [Azure Portal](https://portal.azure.com) go to:
+`Home > Resource groups > "RESOURCE_GROUP_NAME" > "App Service Name" > Monitoring > Alerts`
+- b) Click on `New alert rule`
+- c) Double-check that you have the correct resource to make the alert for and then click `Add` under CONDITION
+- d) Choose a condition e.g. `Http 404`
+- e) Set the `Threshold value` to e.g. `1`. (You will get altered after two consecutive HTTP 404 errors)
+- f) Click `Done`
+
+##### 4.2. Create a new action group for the App Service
+- a) In the same page, go to the `ACTION GROUPS` section and click `Create`
+- b) Give the action group a name e.g. `http404`
+- c) Add an **Action name** e.g. `HTTP 404 and choose `email` in **Action Type**.
+- d) Provide your email and then click `OK`
+
+##### 4.3. Add alter details
+- a) In the same page, go to the `ALERT DETAILS` section and add am `Alert rule name` e.g. `HTTP 404 greater than 1`
+- b) Provide a description and select a -Severity`.
+- c) Click `Create alter rule`
 
 ### Automated Testing
 #### Environment Creation & Deployment
@@ -306,3 +327,5 @@ If everything goes well you should be able to see the pipeline running throughou
 
 #### Log Analytics Workspace Query
 ![pycharm10](images/10_log_analylics_workspace.png)
+
+### Observability and Monitoring
