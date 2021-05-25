@@ -330,3 +330,10 @@ If everything goes well you should be able to see the pipeline running throughou
 ![pycharm10](images/10_log_analylics_workspace.png)
 
 ### Observability and Monitoring
+#### Email received when the 404 alert was triggered
+![pycharm11](images/11_404_alert_email.png)
+
+#### Appservice metrics
+![pycharm11](images/12_app_serivice_metrics.png)
+
+![pycharm11](images/12_1_appservice_metrics.png)
