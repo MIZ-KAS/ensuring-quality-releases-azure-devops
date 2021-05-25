@@ -1,10 +1,12 @@
 #!/bin/bash
+# Helper script to configure the storage account and state backend for Terraform
 
 # Reset in case getopts has been used previously in the shell.
 OPTIND=1
 
 usage() { echo "Please specify: -g <Resource Group> -l <Location>"; }
 
+# Get and assign the arguments set by the user
 while getopts ":g:l:h" opt; do
   case $opt in
   g)
@@ -32,9 +34,11 @@ while getopts ":g:l:h" opt; do
   esac
 done
 
+# Check if all the arguments were provided
 if [[ -z ${RESOURCE_GROUP_NAME+x} ]]; then echo "Argument RESOURCE_GROUP_NAME (-g) is unset"; usage; exit 1; fi
 if [[ -z ${LOCATION+x} ]]; then echo "Argument LOCATION (-l) is unset"; usage; exit 1; fi
 
+# Initialize additional variables
 STORAGE_ACCOUNT_NAME=tstate$RANDOM
 CONTAINER_NAME=tstate
 
@@ -50,6 +54,7 @@ ACCOUNT_KEY=$(az storage account keys list --resource-group "$RESOURCE_GROUP_NAM
 # Create blob container
 az storage container create --name $CONTAINER_NAME --account-name $STORAGE_ACCOUNT_NAME --account-key "$ACCOUNT_KEY"
 
+# Print necessary outputs
 echo "storage_account_name: $STORAGE_ACCOUNT_NAME"
 echo "container_name: $CONTAINER_NAME"
 echo "access_key: $ACCOUNT_KEY"
