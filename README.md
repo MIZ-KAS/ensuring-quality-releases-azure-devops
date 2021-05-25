@@ -39,6 +39,8 @@ virtual machine (Linux) and consist of: **UI Tests** with selenium, **Integratio
 Test** with jmeter. Additionally, it uses an **Azure Log Analytics** workspace to monitor and provide insight into the application's
 behavior.
 
+![pycharm0](images/0_ensuring_quality_releases_arch.png)
+
 ### Prerequisites
 - [Azure Account](https://portal.azure.com) 
 - [Azure Command Line Interface](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
@@ -317,15 +319,26 @@ If everything goes well you should be able to see the pipeline running throughou
 
 ### Monitoring & Observability
 #### Alert rule in the Azure Portal
-![pycharm11](images/11_1_alert_rule.png)
+![pycharm11_1](images/11_1_alert_rule.png)
 
 #### Email received when the 404 alert was triggered
 ![pycharm11](images/11_404_alert_email.png)
 
 #### Appservice metrics
-![pycharm11](images/12_app_serivice_metrics.png)
+![pycharm12](images/12_app_serivice_metrics.png)
 
-![pycharm11](images/12_1_appservice_metrics.png)
+![pycharm12_1](images/12_1_appservice_metrics.png)
 
 #### Log Analytics Workspace Query
 ![pycharm10](images/10_log_analylics_workspace.png)
+
+
+### Helpful resources from Microsoft
+These are all excellent official documentation examples from Microsoft that explain key components of CI/CD on Azure:
+
+- [Design a CI/CD pipeline using Azure DevOps](https://docs.microsoft.com/en-us/azure/architecture/example-scenario/apps/devops-dotnet-webapp)
+- [Create a CI/CD pipeline for GitHub repo using Azure DevOps Starter](https://docs.microsoft.com/en-us/azure/devops-project/azure-devops-project-github)
+- [Create a CI/CD pipeline for Python with Azure DevOps Starter](https://docs.microsoft.com/en-us/azure/devops-project/azure-devops-project-python?WT.mc_id=udacity_learn-wwl)
+- [Continuous deployment to Azure App Service](https://docs.microsoft.com/en-us/azure/app-service/deploy-continuous-deployment?tabs=github#option-1-use-app-service-kudu-build-server?WT.mc_id=udacity_learn-wwl)
+- [Flask on Azure App Services](https://docs.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=bash&WT.mc_id=udacity_learn-wwl&pivots=python-framework-flask)
+- [Azure Pipelines for Python](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/python?view=azure-devops&WT.mc_id=udacity_learn-wwl)
