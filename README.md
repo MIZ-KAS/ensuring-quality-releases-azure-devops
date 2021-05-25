@@ -187,7 +187,7 @@ terraform apply "solution.plan"
 ```
 
 If everything runs correctly you should be able to see the resources been created. You can also check the creation of 
-the resources in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) under 
+the resources in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups) under <br/>
 `Home > Resource groups > "RESOURCE_GROUP_NAME"`
 
 #### 3. Azure DevOps
@@ -213,7 +213,7 @@ serviceConnectionWebApp: 'service-connection-webapp'
 - f) Make sure that the webAppName matches the name provided in the `terraform.tfvars` file.
 
 ##### 3.2. Add the Self-hosted Test Runner to a Pipelines Environment
-- a) Create a New Environment in Azure Pipelines. From inside your project in Azure DevOps go to:
+- a) Create a New Environment in Azure Pipelines. From inside your project in Azure DevOps go to:<br/>
 `Pipelines > Environments > New environment`
 - b) Give the environment a name e.g. `test`, then select `Virtual machines > Next`.
 - c) From the dropdown select `Lunix` and copy the `Registration script`
@@ -240,8 +240,8 @@ cd analytics
 wget https://raw.githubusercontent.com/Microsoft/OMS-Agent-for-Linux/master/installer/scripts/onboard_agent.sh
 sh onboard_agent.sh -w ${AZURE_LOG_ANALYTICS_ID} -s ${AZURE_LOG_ANALYTICS_PRIMARY_KEY}
 ```
-IMPORTANT: The AZURE_LOG_ANALYTICS_ID and AZURE_LOG_ANALYTICS_PRIMARY_KEY can be found in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups).
-`Home > Resource groups > "RESOURCE_GROUP_NAME" > "Log Analytics workspace" > Agents management`
+IMPORTANT: The `AZURE_LOG_ANALYTICS_ID` and `AZURE_LOG_ANALYTICS_PRIMARY_KEY` can be found in the [Azure Portal](https://portal.azure.com/#blade/HubsExtension/BrowseResourceGroups). <br/>
+`Home > Resource groups > "RESOURCE_GROUP_NAME" > "Log Analytics workspace" > Agents management` <br/>
 There you will also find the command to `Download and onboard agent for Linux`.
 
 - d) [Collect custom logs with Log Analytics agent in Azure Monitor](https://docs.microsoft.com/en-us/azure/azure-monitor/agents/data-sources-custom-logs)
@@ -251,14 +251,14 @@ For more information on how to create and install Log Analytic agents click the 
 - [Install Log Analytics agent on Linux computers](https://docs.microsoft.com/en-us/azure/azure-monitor/agents/agent-linux)
 
 ##### 3.3. Upload the public SSH key and tfvars to Pipelines Library
-- a) Add a secure file to Azure Pipelines. From inside your project in Azure DevOps go to:
+- a) Add a secure file to Azure Pipelines. From inside your project in Azure DevOps go to:<br/>
 `Pipelines > Library > Secure files > + Secure file`
 - b) Add the **public ssh key** and the **terraform.tfvars** files to the secure files' library.
-- c) Give the pipeline permissions to use the file:
+- c) Give the pipeline permissions to use the file:<br/>
 `"SECURE_FILE_NAME" > Authorize for use in all pipelines`
 
 ##### 3.4. Create a new Azure Pipeline
-- a) From inside your project in Azure DevOps go to:
+- a) From inside your project in Azure DevOps go to:<br/>
 `Pipelines > Pipelines > Create new pipeline`
 - b) Select your project from GitHub
 - c) Select `Existing Azure Pipelines YAML file`
@@ -269,7 +269,7 @@ If everything goes well you should be able to see the pipeline running throughou
 
 #### 4. Azure Monitor
 ##### 4.1. Create a new alter for the App Service
-- a) From the [Azure Portal](https://portal.azure.com) go to:
+- a) From the [Azure Portal](https://portal.azure.com) go to:<br/>
 `Home > Resource groups > "RESOURCE_GROUP_NAME" > "App Service Name" > Monitoring > Alerts`
 - b) Click on `New alert rule`
 - c) Double-check that you have the correct resource to make the alert for and then click `Add` under CONDITION
