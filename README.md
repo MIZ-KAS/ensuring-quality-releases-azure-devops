@@ -23,6 +23,10 @@ Building a CI/CD pipeline with Azure DevOps.
     + [3.3. Deploy a Log Analytics Workspace](#33-deploy-a-log-analytics-workspace)
     + [3.3. Upload the public SSH key and tfvars to Pipelines Library](#33-upload-the-public-ssh-key-and-tfvars-to-pipelines-library)
     + [3.4. Create a new Azure Pipeline](#34-create-a-new-azure-pipeline)
+  * [4. Azure Monitor](#4-azure-monitor)
+    + [4.1. Create a new alter for the App Service](#41-create-a-new-alter-for-the-app-service)
+    + [4.2. Create a new action group for the App Service](#42-create-a-new-action-group-for-the-app-service)
+    + [4.3. Add alter details](#43-add-alter-details)
 - [Automated Testing](#automated-testing)
   * [Environment Creation & Deployment](#environment-creation---deployment)
     + [Provisioning Infrastructure](#provisioning-infrastructure)
@@ -36,11 +40,16 @@ Building a CI/CD pipeline with Azure DevOps.
     + [Integration Tests](#integration-tests)
       - [Log output of Run Newman Regression Test](#log-output-of-run-newman-regression-test)
       - [Log output of Run Newman Validation Test](#log-output-of-run-newman-validation-test)
+      - [Newman Tests Results Summary](#newman-tests-results-summary)
       - [Newman Tests Results](#newman-tests-results)
     + [Stress Tests](#stress-tests)
       - [Log output of Run JMeter Stress Tests](#log-output-of-run-jmeter-stress-tests)
       - [Log output of Run JMeter Endurance Tests](#log-output-of-run-jmeter-endurance-tests)
   * [Successful execution of the CI/CD Pipeline](#successful-execution-of-the-ci-cd-pipeline)
+- [Monitoring & Observability](#monitoring---observability)
+  * [Alert rule in the Azure Portal](#alert-rule-in-the-azure-portal)
+  * [Email received when the 404 alert was triggered](#email-received-when-the-404-alert-was-triggered)
+  * [Appservice metrics](#appservice-metrics)
   * [Log Analytics Workspace Query](#log-analytics-workspace-query)
 
 
@@ -313,8 +322,11 @@ If everything goes well you should be able to see the pipeline running throughou
 ###### Log output of Run Newman Validation Test
 ![pycharm6](images/6_newman_validation_tests.png)
 
+###### Newman Tests Results Summary
+![pycharm6_1](images/6_1_newman_test_results_summary.png)
+
 ###### Newman Tests Results
-![pycharm6_1](images/6_1_newman_test_results.png)
+![pycharm6_2](images/6_2_newman_test_results.png)
 
 ##### Stress Tests
 ###### Log output of Run JMeter Stress Tests
