@@ -27,30 +27,7 @@ Building a CI/CD pipeline with Azure DevOps.
     + [4.1. Create a new alter for the App Service](#41-create-a-new-alter-for-the-app-service)
     + [4.2. Create a new action group for the App Service](#42-create-a-new-action-group-for-the-app-service)
     + [4.3. Add alter details](#43-add-alter-details)
-- [Automated Testing](#automated-testing)
-  * [Environment Creation & Deployment](#environment-creation---deployment)
-    + [Provisioning Infrastructure](#provisioning-infrastructure)
-      - [Log output of Terraform Apply when executed by the CI/CD Pipeline](#log-output-of-terraform-apply-when-executed-by-the-ci-cd-pipeline)
-    + [Deploy REST API](#deploy-rest-api)
-      - [Log output of Deploy Azure WebApp](#log-output-of-deploy-azure-webapp)
-      - [Deployed REST API](#deployed-rest-api)
-  * [Test](#test)
-    + [UI Test](#ui-test)
-      - [Log output of Run UI Tests with Selenium on VM agent](#log-output-of-run-ui-tests-with-selenium-on-vm-agent)
-    + [Integration Tests](#integration-tests)
-      - [Log output of Run Newman Regression Test](#log-output-of-run-newman-regression-test)
-      - [Log output of Run Newman Validation Test](#log-output-of-run-newman-validation-test)
-      - [Newman Tests Results Summary](#newman-tests-results-summary)
-      - [Newman Tests Results](#newman-tests-results)
-    + [Stress Tests](#stress-tests)
-      - [Log output of Run JMeter Stress Tests](#log-output-of-run-jmeter-stress-tests)
-      - [Log output of Run JMeter Endurance Tests](#log-output-of-run-jmeter-endurance-tests)
-  * [Successful execution of the CI/CD Pipeline](#successful-execution-of-the-ci-cd-pipeline)
-- [Monitoring & Observability](#monitoring---observability)
-  * [Alert rule in the Azure Portal](#alert-rule-in-the-azure-portal)
-  * [Email received when the 404 alert was triggered](#email-received-when-the-404-alert-was-triggered)
-  * [Appservice metrics](#appservice-metrics)
-  * [Log Analytics Workspace Query](#log-analytics-workspace-query)
+- [Automated Testing Output](#automated-testing-output)
 
 
 ### Introduction
@@ -298,7 +275,7 @@ If everything goes well you should be able to see the pipeline running throughou
 - b) Provide a description and select a -Severity`.
 - c) Click `Create alter rule`
 
-### Automated Testing
+### Automated Testing Output
 #### Environment Creation & Deployment
 ##### Provisioning Infrastructure
 ###### Log output of Terraform Apply when executed by the CI/CD Pipeline
